@@ -3,6 +3,11 @@
 ## Description
 BiblioNum est une application de gestion de bibliothèque numérique développée avec Spring Boot. Le projet est en cours de développement et se concentre actuellement sur la gestion des utilisateurs et l'authentification.
 
+## Captures d'écran
+### Page d'inscription
+![Page d'inscription](docs/images/inscription.jpeg)
+
+
 ## Création du Projet
 Ce projet a été créé avec [Spring Initializr](https://start.spring.io/) en utilisant les paramètres suivants :
 - **Type de projet** : Maven
@@ -90,6 +95,7 @@ mvn spring-boot:run
 
 ## Documentation
 Pour plus d'informations, consultez la documentation des APIs et des URLs dans le fichier de documentation du projet.
+
 
 ## Licence
 [Veuillez spécifier la licence ici]
