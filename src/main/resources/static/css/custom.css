@@ -1,0 +1,82 @@
+/* Custom styles for Bibliothèque Numérique application */
+
+/* Navbar gradient style */
+.navbar-gradient {
+    background-image: -webkit-gradient(linear, left top, right top, from(#FF7854), to(#FF5079));
+    background-image: linear-gradient(to right, #FF7854 0%, #FF5079 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFF7854',endColorstr='#FFFF5079',GradientType=1);
+}
+
+/* Body styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Card styles */
+.card {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Button styles */
+.btn-custom-primary {
+    background-image: -webkit-gradient(linear, left top, right top, from(#FF7854), to(#FF5079));
+    background-image: linear-gradient(to right, #FF7854 0%, #FF5079 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFF7854',endColorstr='#FFFF5079',GradientType=1);
+    border: none;
+    color: white;
+}
+
+.btn-custom-primary:hover {
+    background-image: -webkit-gradient(linear, left top, right top, from(#FF5079), to(#FF7854));
+    background-image: linear-gradient(to right, #FF5079 0%, #FF7854 100%);
+    color: white;
+}
+
+/* Override Bootstrap's default btn-primary */
+.btn-primary {
+    background-image: -webkit-gradient(linear, left top, right top, from(#FF7854), to(#FF5079));
+    background-image: linear-gradient(to right, #FF7854 0%, #FF5079 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFF7854',endColorstr='#FFFF5079',GradientType=1);
+    border: none;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+    background-image: -webkit-gradient(linear, left top, right top, from(#FF5079), to(#FF7854)) !important;
+    background-image: linear-gradient(to right, #FF5079 0%, #FF7854 100%) !important;
+    border: none !important;
+    box-shadow: 0 0 0 0.25rem rgba(255, 120, 84, 0.5) !important;
+}
+
+/* Form styles */
+.form-control:focus {
+    border-color: #FF7854;
+    box-shadow: 0 0 0 0.25rem rgba(255, 120, 84, 0.25);
+}
+
+/* Footer styles */
+.footer {
+    background-color: #343a40;
+    color: #fff;
+    padding: 1rem 0;
+    margin-top: 2rem;
+}
+
+/* Custom text colors */
+.text-custom-primary {
+    color: #FF7854;
+}
+
+.text-custom-secondary {
+    color: #FF5079;
+}

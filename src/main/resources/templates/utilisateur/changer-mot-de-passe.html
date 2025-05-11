@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/base}">
+
+<body>
+    <main layout:fragment="content">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <h1 class="mb-4 text-center">Changer mon mot de passe</h1>
+                
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Formulaire de changement de mot de passe</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="form" th:action="@{/changer-mot-de-passe}" method="post" class="mx-auto" style="max-width: 600px;" th:object="${passwordChangeRequest}">
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="currentPassword" name="currentPassword" th:field="*{currentPassword}" required>
+                                <label for="currentPassword">Ancien mot de passe</label>
+                                <div th:if="${#fields.hasErrors('currentPassword')}" class="text-danger" th:errors="*{currentPassword}"></div>
+                            </div>
+                            
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="newPassword" name="newPassword" th:field="*{newPassword}" required>
+                                <label for="newPassword">Nouveau mot de passe</label>
+                                <div class="form-text">
+                                    <i class="bi bi-info-circle"></i> Votre mot de passe doit respecter les critères suivants:
+                                    <ul class="mt-2 mb-0">
+                                        <li>Au moins 8 caractères</li>
+                                        <li>Au moins une lettre majuscule</li>
+                                        <li>Au moins une lettre minuscule</li>
+                                        <li>Au moins un chiffre</li>
+                                        <li>Au moins un caractère spécial parmi @#$%^&+=!</li>
+                                    </ul>
+                                </div>
+                                <div th:if="${#fields.hasErrors('newPassword')}" class="text-danger" th:errors="*{newPassword}"></div>
+                            </div>
+                            
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" th:field="*{confirmPassword}" required>
+                                <label for="confirmPassword">Confirmer le nouveau mot de passe</label>
+                                <div th:if="${#fields.hasErrors('confirmPassword')}" class="text-danger" th:errors="*{confirmPassword}"></div>
+                            </div>
+                            
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                                <a th:href="@{/mon-compte}" class="btn btn-secondary me-md-2">
+                                    <i class="bi bi-arrow-left"></i> Annuler
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-lg"></i> Changer le mot de passe
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+</body>
+
+</html>

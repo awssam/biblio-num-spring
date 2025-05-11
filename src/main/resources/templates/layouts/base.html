@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle != null ? pageTitle : 'Bibliothèque Numérique'}">Bibliothèque Numérique</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap-icons.css}">
+
+    <script th:src="@{/js/jquery.min.js}" ></script>
+
+    
+    <link rel="stylesheet" th:href="@{/css/custom.css}">
+</head>
+<body>
+    <header>
+        <div th:replace="~{layouts/navbar :: navbar}"></div>
+    </header>
+
+    <main class="container my-4">
+        <!-- endroit pour les alerts (notifs) -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <main layout:fragment="content">ba3boola
+        </main>
+
+    </main>
+
+    <div th:replace="~{layouts/footer :: footer}"></div>
+
+    <script th:src="@{/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+    <script th:src="@{/js/just-validate.production.min.js}" ></script>
+    
+    <!-- endroit pour page-specific scripts -->
+    <th:block th:replace="~{:: scripts} ?: ~{}" th:remove="tag"></th:block>
+    
+</body>
+</html>

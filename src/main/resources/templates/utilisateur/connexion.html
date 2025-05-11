@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/base}">
+
+<head>
+    <!-- Bloc pour le titre -->
+    <th:block th:fragment="title">
+        <title>Connexion | Bibliothèque Numérique</title>
+    </th:block>
+    
+    <!-- Styles spécifiques à cette page -->
+    <th:block th:fragment="styles">
+        <style>
+            .login-form {
+                max-width: 450px;
+                margin: 0 auto;
+                padding: 15px;
+            }
+            
+            .login-header {
+                position: relative;
+                padding-bottom: 10px;
+                margin-bottom: 30px;
+                text-align: center;
+            }
+            
+            .login-header:after {
+                content: "";
+                position: absolute;
+                left: 50%;
+                bottom: 0;
+                width: 50px;
+                height: 3px;
+                transform: translateX(-50%);
+                background-color: #0d6efd;
+            }
+            
+            .social-login {
+                margin: 20px 0;
+                text-align: center;
+            }
+            
+            .social-btn {
+                font-size: 1.5rem;
+                margin: 0 5px;
+            }
+            
+            .password-reset-modal .modal-logo {
+                max-width: 120px;
+                margin: 0 auto 20px;
+            }
+        </style>
+    </th:block>
+</head>
+
+<body>
+    <!-- Contenu de la page -->
+    <main layout:fragment="content">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h1 class="text-center mb-4">Connexion</h1>
+                
+                <!-- Affichage des messages d'erreur de Spring Security -->
+                <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    Nom d'utilisateur ou mot de passe incorrect
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                
+                <!-- Message de déconnexion réussie -->
+                <div th:if="${param.logout}" class="alert alert-success alert-dismissible fade show" role="alert">
+                    Vous avez été déconnecté avec succès
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <form th:action="@{/connexion}" method="post">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="username" name="username" required autofocus>
+                                <label for="username">Nom d'utilisateur</label>
+                            </div>
+                            
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="password" name="password" required>
+                                <label for="password">Mot de passe</label>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me">
+                                    <label class="form-check-label" for="remember-me">Se souvenir de moi</label>
+                                </div>
+                                <a href="#" class="link-primary" data-bs-toggle="modal" data-bs-target="#passwordResetModal">Mot de passe oublié?</a>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-box-arrow-in-right"></i> Se connecter
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <hr class="my-4">
+                        
+                        <div class="text-center">
+                            Pas encore de compte? <a th:href="@{/inscription}" class="link-primary">S'inscrire</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal de réinitialisation de mot de passe -->
+        <div class="modal fade password-reset-modal" id="passwordResetModal" tabindex="-1" aria-labelledby="passwordResetModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="forgotPasswordModalLabel">Mot de passe oublié</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img th:src="@{/images/who-cares.png}" alt="Who cares" class="img-fluid">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Script spécifique à cette page -->
+    <th:block layout:fragment="scripts">
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Gestionnaire d'événement pour le formulaire de réinitialisation de mot de passe
+                const passwordResetForm = document.getElementById('passwordResetForm');
+                if (passwordResetForm) {
+                    passwordResetForm.addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        const email = document.getElementById('resetEmail').value;
+                        
+                        // Simuler une requête de réinitialisation de mot de passe
+                        setTimeout(function() {
+                            // Fermer le modal
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('passwordResetModal'));
+                            modal.hide();
+                            
+                            // Afficher un message de succès (pour démonstration)
+                            alert('Un lien de réinitialisation a été envoyé à ' + email + ' si cette adresse existe dans notre système.');
+                        }, 1000);
+                    });
+                }
+            });
+        </script>
+    </th:block>
+</body>
+
+</html>

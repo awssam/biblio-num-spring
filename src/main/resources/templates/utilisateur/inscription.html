@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/base}">
+
+<head>
+    <!-- Bloc pour le titre -->
+    <th:block th:fragment="title">
+        <title>Inscription | Bibliothèque Numérique</title>
+    </th:block>
+    
+    <!-- Styles spécifiques à cette page -->
+    <th:block th:fragment="styles">
+        <style>
+            .registration-form {
+                max-width: 650px;
+                margin: 0 auto;
+            }
+            
+            .form-floating {
+                margin-bottom: 1rem;
+            }
+            
+            .signup-header {
+                position: relative;
+                padding-bottom: 10px;
+                margin-bottom: 20px;
+            }
+            
+            .signup-header:after {
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 50px;
+                height: 3px;
+                background-color: #0d6efd;
+            }
+        </style>
+    </th:block>
+</head>
+
+<body>
+    <!-- Contenu de la page -->
+    <main layout:fragment="content">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h1 class="text-center mb-4">Inscription</h1>
+                
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Créer un nouveau compte</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <form th:action="@{/inscription}" method="post" th:object="${utilisateur}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="firstName" th:field="*{firstName}" required>
+                                        <label for="firstName">Prénom</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="lastName" th:field="*{lastName}" required>
+                                        <label for="lastName">Nom</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="username" th:field="*{username}" required autofocus>
+                                <label for="username">Nom d'utilisateur</label>
+                            </div>
+                            
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="email" th:field="*{email}" required>
+                                <label for="email">Adresse e-mail</label>
+                            </div>
+                            
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="password" th:field="*{password}" required minlength="8">
+                                <label for="password">Mot de passe</label>
+                                <div class="form-text">
+                                    <i class="bi bi-info-circle"></i> Le mot de passe doit contenir au moins 8 caractères
+                                </div>
+                            </div>
+                            
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="terms" name="terms" required>
+                                <label class="form-check-label" for="terms">
+                                    J'accepte les <a href="#" class="link-primary">conditions d'utilisation</a> et la <a href="#" class="link-primary">politique de confidentialité</a>
+                                </label>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-person-plus"></i> Créer un compte
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <hr class="my-4">
+                        
+                        <div class="text-center">
+                            Vous avez déjà un compte? <a th:href="@{/connexion}" class="link-primary">Se connecter</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Scripts spécifiques à cette page -->
+    <th:block th:fragment="scripts">
+        <script>
+            // JavaScript pour la validation des formulaires Bootstrap
+            document.addEventListener('DOMContentLoaded', function() {
+                const forms = document.querySelectorAll('.needs-validation');
+                
+                Array.from(forms).forEach(form => {
+                    form.addEventListener('submit', event => {
+                        if (!form.checkValidity()) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+                
+                // Validation du mot de passe
+                const passwordInput = document.getElementById('password');
+                passwordInput.addEventListener('input', function() {
+                    if (passwordInput.value.length < 8) {
+                        passwordInput.setCustomValidity('Le mot de passe doit contenir au moins 8 caractères');
+                    } else {
+                        passwordInput.setCustomValidity('');
+                    }
+                });
+            });
+        </script>
+    </th:block>
+</body>
+
+</html>
