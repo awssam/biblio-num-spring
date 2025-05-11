@@ -46,8 +46,9 @@
                         <div class="row mb-3">
                             <div class="col-md-4 fw-bold">Rôle:</div>
                             <div class="col-md-8">
-                                <span class="badge bg-success" th:if="${utilisateur.role == 'administrateur'}">Administrateur</span>
-                                <span class="badge bg-info" th:if="${utilisateur.role == 'membre'}">Membre</span>
+                                <span class="badge bg-info" th:if="${utilisateur.isMember()}">Membre</span>
+
+                                <span class="badge bg-success" th:if="${utilisateur.isAdmin()}">Administrateur</span>
                             </div>
                         </div>
                     </div>
