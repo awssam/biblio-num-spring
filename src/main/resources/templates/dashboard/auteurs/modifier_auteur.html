@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/base}">
+
+<head>
+    <th:block th:fragment="title">
+        <title>Modifier l'auteur Biblio UIT</title>
+    </th:block>
+</head>
+
+<body>
+    <main layout:fragment="content">
+        
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h4 class="mb-0">Modifier l'auteur : <span th:text="${auteur.nom}">Nom de l'auteur</span></h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" th:action="@{/dashboard/auteurs/{id}/modifier(id=${auteur.id})}" th:object="${auteur}">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            
+                             <div class="mb-3">
+                                <label for="prenom" class="form-label">Prénom de l'auteur</label>
+                                <input type="text" th:field="*{prenom}" id="prenom" class="form-control" th:classappend="${#fields.hasErrors('prenom')} ? 'is-invalid'" />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('prenom')}" th:errors="*{prenom}">Erreur dans le prénom</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="nom" class="form-label">Nom de l'auteur</label>
+                                <input type="text" th:field="*{nom}" id="nom" class="form-control" th:classappend="${#fields.hasErrors('nom')} ? 'is-invalid'" />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}">Erreur dans le nom</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="biographie" class="form-label">Biographie de l'auteur</label>
+                                <textarea th:field="*{biographie}" id="biographie" class="form-control" rows="5" th:classappend="${#fields.hasErrors('biographie')} ? 'is-invalid'"></textarea>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('biographie')}" th:errors="*{biographie}">Erreur dans la biographie</div>
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <a th:href="@{/dashboard/auteurs}" class="btn btn-secondary">Annuler</a>
+                                <button type="submit" class="btn btn-success">Enregistrer les modifications</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
