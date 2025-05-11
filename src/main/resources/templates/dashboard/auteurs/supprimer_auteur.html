@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/base}">
+
+<head>
+    <th:block th:fragment="title">
+        <title>Supprimer l'auteur Biblio UIT</title>
+    </th:block>
+</head>
+
+<body>
+    <main layout:fragment="content">
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">Supprimer l'auteur</h4>
+            </div>
+            <div class="card-body">
+                <h5 class="mb-4 text-center">Êtes-vous sûr de vouloir supprimer l'auteur "<span th:text="${auteur.nom}">Nom de l'auteur</span>" ?</h5>
+                
+                    <div class="alert alert-warning">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Attention : Cette action est irréversible.
+                    </div>
+                    <form method="post" th:action="@{/dashboard/auteurs/{id}/supprimer(id=${auteur.id})}">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <div class="d-flex justify-content-between">
+                            <a th:href="@{/dashboard/auteurs}" class="btn btn-secondary">Annuler</a>
+                            <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+                        </div>
+                    </form>
+            </div>
+        </div>
+    </div>
+</div>
+    </main>
+</body>
