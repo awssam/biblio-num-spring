@@ -80,3 +80,12 @@ body {
 .text-custom-secondary {
     color: #FF5079;
 }
+
+/* Style for the SVG logo */
+.logo-svg {
+    height: 65px;
+    width: auto;
+    margin-right: 10px;
+    vertical-align: middle;
+    filter: brightness(0) invert(1); /* Makes the logo white to match text */
+}

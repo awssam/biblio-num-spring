@@ -8,9 +8,6 @@
                 <h1 class="mb-4 text-center">Changer mon mot de passe</h1>
                 
                 <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">Formulaire de changement de mot de passe</h5>
-                    </div>
                     <div class="card-body">
                         <form id="form" th:action="@{/changer-mot-de-passe}" method="post" class="mx-auto" style="max-width: 600px;" th:object="${passwordChangeRequest}">
                             <div class="form-floating mb-3">
