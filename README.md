@@ -98,4 +98,4 @@ Pour plus d'informations, consultez la documentation des APIs et des URLs dans l
 
 
 ## Licence
-[Veuillez spécifier la licence ici]
+MIT
