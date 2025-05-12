@@ -55,11 +55,18 @@ public class ImageService {
     }
 
     public boolean deleteImage(String filename, String classAppelant) {
-        Path filePath = uploadDir.resolve(classAppelant).resolve(filename);
+        if (filename != null && filename.startsWith(classAppelant + "/")) {
+            filename = filename.substring((classAppelant + "/").length());
+        }
+        
+        Path callerDir = uploadDir.resolve(classAppelant);
+        if (!Files.exists(callerDir)) {
+            return false; 
+        }
+        Path filePath = callerDir.resolve(filename);
         try {
             return Files.deleteIfExists(filePath);
         } catch (IOException e) {
-            // e.printStackTrace();
             return false;
         }
     }
