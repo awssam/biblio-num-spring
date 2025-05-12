@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/base}">
+
+<head>
+    <th:block th:fragment="title">
+        <title>Ajouter un livre Biblio UIT</title>
+    </th:block>
+</head>
+
+<body>
+    <main layout:fragment="content">
+        
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h4 class="mb-0">Ajouter un livre</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" th:action="@{/dashboard/livres/creer}" th:object="${livre}">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                            <div class="mb-3">
+                                <label for="titre" class="form-label">Tire du livre</label>
+                                <input type="text" th:field="*{titre}" id="titre" class="form-control" th:classappend="${#fields.hasErrors('titre')} ? 'is-invalid'" />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('titre')}" th:errors="*{titre}">Erreur dans le titre</div>
+                            </div>
+
+
+                            <div class="mb-3">
+                                <label for="resume" class="form-label">Résumé du livre</label>
+                                <textarea th:field="*{resume}" id="resume" class="form-control" rows="5" th:classappend="${#fields.hasErrors('resume')} ? 'is-invalid'"></textarea>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('resume')}" th:errors="*{resume}">Erreur dans la résumé</div>
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <a th:href="@{/dashboard/livres}" class="btn btn-secondary">Annuler</a>
+                                <button type="submit" class="btn btn-success">Ajouter l'livre</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
