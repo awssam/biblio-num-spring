@@ -94,6 +94,55 @@ public class Livre {
         return "Titre non disponible";
     }
 
+    public String getBeautifulAuteurs() {
+        if (titre != null && !titre.isEmpty()) {
+            StringBuilder titreComplet = new StringBuilder("");
+            if (!auteurs.isEmpty()) {
+                if (auteurs.size() >= 2) {
+                    // Prendre les deux premiers auteurs
+                    Auteur[] deuxAuteurs = auteurs.stream().limit(2).toArray(Auteur[]::new);
+                    String auteur1 = formatAuteurInitiales(deuxAuteurs[0], false);
+                    String auteur2 = formatAuteurInitiales(deuxAuteurs[1], false);
+                    titreComplet.append(auteur1).append(" et ").append(auteur2);
+                    
+                    // S'il y a plus de deux auteurs
+                    int autresAuteurs = auteurs.size() - 2;
+                    if (autresAuteurs > 0) {
+                        titreComplet.append(" et ").append(autresAuteurs)
+                                  .append(autresAuteurs == 1 ? " autre" : " autres");
+                    }
+                } else {
+                    // Un seul auteur - afficher le nom complet
+                    Auteur premierAuteur = auteurs.iterator().next();
+                    titreComplet.append(formatAuteurInitiales(premierAuteur, true));
+                }
+            } else {
+                titreComplet.append("Auteur inconnu");
+            }
+            return titreComplet.toString();
+        }
+        return "Titre non disponible";
+    }
+
+    // Méthode pour formater le nom d'un auteur avec initiales
+    private String formatAuteurInitiales(Auteur auteur, boolean nomComplet) {
+        String nom = auteur.getNom();
+        String prenom = auteur.getPrenom();
+        
+        if (nom != null && !nom.isEmpty() && prenom != null && !prenom.isEmpty()) {
+            if (nomComplet) {
+                return prenom + " " + nom;
+            } else {
+                return prenom.charAt(0) + "." + nom;
+            }
+        } else if (nom != null && !nom.isEmpty()) {
+            return nom;
+        } else if (prenom != null && !prenom.isEmpty()) {
+            return prenom;
+        }
+        return "Inconnu";
+    }
+
     // Méthode pour obtenir le nom de la couverture
     public String getCouvertureURL() {
         if (couverture != null && !couverture.isEmpty()) {
