@@ -16,3 +16,7 @@ primary_region = 'cdg'
 
 [[vm]]
   size = 'shared-cpu-1x'
+
+[mounts]
+  source="biblio_data"
+  destination="/data"

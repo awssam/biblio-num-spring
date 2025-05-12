@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: bibliotheque-num
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    rootDir: .
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
+      - key: PORT
+        value: 8080

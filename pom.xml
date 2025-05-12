@@ -11,7 +11,7 @@
     <groupId>uit.fs</groupId>
     <artifactId>bibliotheque</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>bibliotheque</name>
     <description>Bibliothèque Numérique</description>
     <url/>
