@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,31 +28,43 @@ public class ImageService {
         }
     }
 
-    // Upload and save the image file
-    public String saveImage(MultipartFile file) throws IOException {
-        String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        Path filePath = uploadDir.resolve(filename);
+    public String saveImage(MultipartFile file, String classAppelant) throws IOException {
+        Path callerDir = uploadDir.resolve(classAppelant);
+        if (!Files.exists(callerDir)) {
+            Files.createDirectories(callerDir);
+        }
+        
+        String uuid = UUID.randomUUID().toString();
+        String originalFilename = file.getOriginalFilename();
+        String extension = originalFilename != null ? 
+            originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
+        String filename = uuid + extension;
+        
+        Path filePath = callerDir.resolve(filename);
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-        return filename; // Return filename to be stored in DB
+        
+        return classAppelant + "/" + filename;
     }
 
-    // Get image bytes (e.g., for API serving if needed)
-    public byte[] getImage(String filename) throws IOException {
-        Path filePath = uploadDir.resolve(filename);
+    public byte[] getImage(String filename, String classAppelant) throws IOException {
+        Path filePath = uploadDir.resolve(classAppelant).resolve(filename);
         if (!Files.exists(filePath)) {
-            throw new FileNotFoundException("Image not found: " + filename);
+            throw new FileNotFoundException("Image not found: " + classAppelant + "/" + filename);
         }
         return Files.readAllBytes(filePath);
     }
 
-    // Delete an image
-    public boolean deleteImage(String filename) {
-        Path filePath = uploadDir.resolve(filename);
+    public boolean deleteImage(String filename, String classAppelant) {
+        Path filePath = uploadDir.resolve(classAppelant).resolve(filename);
         try {
             return Files.deleteIfExists(filePath);
         } catch (IOException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
             return false;
         }
+    }
+    
+    public Path getFullPath(String relativePath) {
+        return uploadDir.resolve(relativePath);
     }
 }

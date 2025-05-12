@@ -28,7 +28,6 @@ public class FileStorageConfig implements WebMvcConfigurer {
         ensureUploadDirectoryExists();
     }
 
-    // ⬇️ Crée le dossier upload au démarrage
     private void ensureUploadDirectoryExists() {
         File directory = new File(uploadDir);
         if (!directory.exists()) {
@@ -36,7 +35,6 @@ public class FileStorageConfig implements WebMvcConfigurer {
         }
     }
 
-    // ⬇️ Expose le dossier /uploads comme ressource statique
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         Path uploadPath = Paths.get(uploadDir).toAbsolutePath();
@@ -44,7 +42,6 @@ public class FileStorageConfig implements WebMvcConfigurer {
                 .addResourceLocations("file:" + uploadPath + "/");
     }
 
-    // ⬇️ Fournit une implémentation de config d’URL d’image
     @Bean
     public ImageUrlConfig imageUrlConfig() {
         return new ImageUrlConfig(baseUploadUrl, defaultAvatarUrl);
