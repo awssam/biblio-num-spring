@@ -13,13 +13,49 @@
         
 
         <div class="row justify-content-center">
-            <div class="col-md-6">
+                <div class="col-lg-4 mb-4">
+                    <div class="card shadow-sm border-0 rounded-3 h-100">
+                        <div class="card-header bg-gradient bg-primary text-white border-0 rounded-top-3">
+                            <h4 class="mb-0"><i class="fas fa-info-circle me-2"></i>Informations</h4>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="border-bottom pb-2 mb-3">Comment ajouter un livre ?</h5>
+                            <div class="mb-4">
+                                <p>Pour ajouter un nouveau livre dans la bibliothèque, veuillez remplir tous les champs obligatoires (marqués d'un *) et les informations supplémentaires si disponibles.</p>
+                                <p>Pour une meilleure expérience utilisateur :</p>
+                                <ul class="list-group list-group-flush mb-3">
+                                    <li class="list-group-item bg-transparent ps-0"><i class="fas fa-check-circle text-success me-2"></i> Ajoutez une couverture pour améliorer la visibilité</li>
+                                    <li class="list-group-item bg-transparent ps-0"><i class="fas fa-check-circle text-success me-2"></i> Sélectionnez les bonnes catégories pour faciliter la recherche</li>
+                                    <li class="list-group-item bg-transparent ps-0"><i class="fas fa-check-circle text-success me-2"></i> Rédigez un résumé complet pour attirer les lecteurs</li>
+                                </ul>
+                            </div>
+                            
+                            <h5 class="border-bottom pb-2 mb-3">Actions</h5>
+                            <div class="d-grid gap-2">
+                                 <a th:href="@{/dashboard}" class="btn btn-outline-primary">
+                                    <i class="bi bi-speedometer2"></i> Tableau de bord
+                                </a>
+                                <a th:href="@{/dashboard/livres}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-plus-circle"></i> Voir tous les livres
+                                </a>
+                                <a th:href="@{/dashboard/auteurs}" class="btn btn-outline-secondary">
+                                <i class="bi bi-person-lines-fill"></i> Gérer les auteurs
+                                </a>
+                                <a th:href="@{/dashboard/categories}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-list"></i>  Gérer les catégories
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            <div class="col-lg-8">
                 <div class="card">
                     <div class="card-header bg-success text-white">
                         <h4 class="mb-0">Ajouter un livre</h4>
                     </div>
                     <div class="card-body">
-                        <form method="post" th:action="@{/dashboard/livres/creer}" th:object="${livre}">
+                        <form method="post" th:action="@{/dashboard/livres/creer}" th:object="${livre}" enctype="multipart/form-data">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
                             <div class="mb-3">
@@ -28,6 +64,30 @@
                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('titre')}" th:errors="*{titre}">Erreur dans le titre</div>
                             </div>
 
+                            <div class="mb-3">
+                                <label for="datePublication" class="form-label">Date de publication</label>
+                                <input type="date" th:field="*{datePublication}" id="datePublication" class="form-control" 
+                                       th:classappend="${#fields.hasErrors('datePublication')} ? 'is-invalid'" />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('datePublication')}" th:errors="*{datePublication}">
+                                    Erreur dans la date de publication
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="copiesDisponibles" class="form-label">Nombre de copies disponibles</label>
+                                <input type="number" th:field="*{copiesDisponibles}" id="copiesDisponibles" class="form-control" 
+                                       min="0" value="1" th:classappend="${#fields.hasErrors('copiesDisponibles')} ? 'is-invalid'" />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('copiesDisponibles')}" th:errors="*{copiesDisponibles}">
+                                    Erreur dans le nombre de copies
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="fichierCouverture" class="form-label">Image de couverture</label>
+                                <input type="file" name="fichierCouverture" id="fichierCouverture" class="form-control" 
+                                       accept=".png,.jpg,.jpeg"  />
+                                <small class="form-text text-muted">Formats acceptés: PNG, JPG, JPEG</small>
+                            </div>
 
                             <div class="mb-3">
                                 <label for="resume" class="form-label">Résumé du livre</label>

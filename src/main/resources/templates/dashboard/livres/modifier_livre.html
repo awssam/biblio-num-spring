@@ -10,31 +10,122 @@
 
 <body>
     <main layout:fragment="content">
-        
+
 
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header bg-success text-white">
-                        <h4 class="mb-0">Modifier le livre : <span th:text="${livre.titre}">Titre de l'livre</span></h4>
+            <!-- Sidebar avec informations -->
+            <div class="col-lg-4 mb-4">
+                <div class="card shadow-sm border-0 rounded-3 h-100">
+                    <div class="card-header bg-gradient bg-warning text-dark border-0 rounded-top-3">
+                        <h4 class="mb-0"><i class="bi bi-info-circle me-2"></i>Aperçu du livre</h4>
                     </div>
                     <div class="card-body">
-                        <form method="post" th:action="@{/dashboard/livres/{id}/modifier(id=${livre.id})}" th:object="${livre}">
+                        <!-- Check if the book has a cover -->
+                        <div th:if="${livre.couverture != null}">
+                            <div class="text-center mb-4">
+                                <img th:src="@{${'/uploads/'+livre.couverture}}" alt="Couverture actuelle"
+                                    class="img-fluid rounded shadow-sm" style="max-height: 250px;">
+                                <p class="mt-2 text-muted fst-italic">Couverture actuelle</p>
+                            </div>
+                        </div>
+                        <div th:unless="${livre.couverture != null}">
+                            <div class="text-center mb-4 p-4 bg-light rounded">
+                                <i class="bi bi-book fa-5x text-secondary"></i>
+                                <p class="mt-3 text-muted">Aucune couverture</p>
+                            </div>
+                        </div>
+
+                        <!-- Book details section -->
+                        <div class="book-details">
+                            <h5 class="border-bottom pb-2 mb-3">Informations actuelles</h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item bg-transparent ps-0">
+                                    <strong><i class="bi bi-calendar-date me-2 text-warning"></i>Date d'ajout :</strong>
+                                    <div class="text-muted" th:text="${#temporals.format(livre.dateAjout, 'dd/MM/yyyy HH:mm')}"></div>
+                                </li>
+                                <li class="list-group-item bg-transparent ps-0">
+                                    <strong><i class="bi bi-calendar me-2 text-warning"></i>Date de publication :</strong>
+                                    <div class="text-muted" th:text="${#temporals.format(livre.datePublication, 'dd/MM/yyyy')}"></div>
+                                </li>
+                                <li class="list-group-item bg-transparent ps-0">
+                                    <strong><i class="bi bi-book-half me-2 text-warning"></i>Copies disponibles :</strong>
+                                    <div class="text-muted" th:text="${livre.copiesDisponibles}"></div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <h5 class="border-bottom pb-2 mb-3">Actions</h5>
+                        <div class="d-grid gap-2">
+                            <a th:href="@{/dashboard}" class="btn btn-outline-primary">
+                                <i class="bi bi-speedometer2"></i> Tableau de bord
+                            </a>
+                            <a th:href="@{/dashboard/livres}" class="btn btn-outline-secondary">
+                                <i class="bi bi-plus-circle"></i> Voir tous les livres
+                            </a>
+                            <a th:href="@{/dashboard/auteurs}" class="btn btn-outline-secondary">
+                                <i class="bi bi-person-lines-fill"></i> Gérer les auteurs
+                            </a>
+                            <a th:href="@{/dashboard/categories}" class="btn btn-outline-secondary">
+                                <i class="bi bi-list"></i> Gérer les catégories
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header bg-gradient bg-warning text-dark border-0 rounded-top-3 ">
+                        <div class="d-flex align-items-center">
+                            <h4 class="mb-0"> <i class="bi bi-pencil-square "></i> Modifier le livre : <span th:text="${livre.titre}">Titre de l'livre</span></h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" th:action="@{/dashboard/livres/{id}/modifier(id=${livre.id})}"
+                            th:object="${livre}" enctype="multipart/form-data">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                            
+
                             <div class="mb-3">
                                 <label for="titre" class="form-label">Tire du livre</label>
-                                <input type="text" th:field="*{titre}" id="titre" class="form-control" th:classappend="${#fields.hasErrors('titre')} ? 'is-invalid'" />
-                                <div class="invalid-feedback" th:if="${#fields.hasErrors('titre')}" th:errors="*{titre}">Erreur dans le titre</div>
+                                <input type="text" th:field="*{titre}" id="titre" class="form-control"
+                                    th:classappend="${#fields.hasErrors('titre')} ? 'is-invalid'" />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('titre')}"
+                                    th:errors="*{titre}">Erreur dans le titre</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="datePublication" class="form-label">Date de publication</label>
+                                <input type="date" th:value="${#temporals.format(livre.datePublication, 'yyyy-MM-dd')}" th:name="datePublication" id="datePublication" class="form-control"
+                                    th:classappend="${#fields.hasErrors('datePublication')} ? 'is-invalid'" />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('datePublication')}" th:errors="*{datePublication}">
+                                    Erreur dans la date de publication
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="copiesDisponibles" class="form-label">Nombre de copies disponibles</label>
+                                <input type="number" th:field="*{copiesDisponibles}" id="copiesDisponibles" class="form-control"
+                                    min="0" th:classappend="${#fields.hasErrors('copiesDisponibles')} ? 'is-invalid'" />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('copiesDisponibles')}" th:errors="*{copiesDisponibles}">
+                                    Erreur dans le nombre de copies
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="fichierCouverture" class="form-label">Image de couverture</label>
+                                <input type="file" name="fichierCouverture" id="fichierCouverture" class="form-control"
+                                    accept=".png,.jpg,.jpeg" />
+                                <small class="form-text text-muted">Formats acceptés: PNG, JPG, JPEG</small>
                             </div>
 
 
                             <div class="mb-3">
                                 <label for="resume" class="form-label">Résumé du livre</label>
-                                <textarea th:field="*{resume}" id="resume" class="form-control" rows="5" th:classappend="${#fields.hasErrors('resume')} ? 'is-invalid'"></textarea>
-                                <div class="invalid-feedback" th:if="${#fields.hasErrors('resume')}" th:errors="*{resume}">Erreur dans la résumé</div>
+                                <textarea th:field="*{resume}" id="resume" class="form-control" rows="5"
+                                    th:classappend="${#fields.hasErrors('resume')} ? 'is-invalid'"></textarea>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('resume')}"
+                                    th:errors="*{resume}">Erreur dans la résumé</div>
                             </div>
-                            
+
 
                             <div class="d-flex justify-content-between">
                                 <a th:href="@{/dashboard/livres}" class="btn btn-secondary">Annuler</a>

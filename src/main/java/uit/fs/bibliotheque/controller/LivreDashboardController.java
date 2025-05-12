@@ -1,5 +1,7 @@
 package uit.fs.bibliotheque.controller;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -16,10 +18,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
 import uit.fs.bibliotheque.model.Livre;
+import uit.fs.bibliotheque.service.ImageService;
 import uit.fs.bibliotheque.service.LivreService;
 
 @Controller
@@ -31,9 +35,11 @@ import uit.fs.bibliotheque.service.LivreService;
 public class LivreDashboardController extends AbstractController {
 
     private final LivreService livreService;
+    private final ImageService imageService;
 
-    public LivreDashboardController(LivreService livreService) {
+    public LivreDashboardController(LivreService livreService, ImageService imageService) {
         this.livreService = livreService;
+        this.imageService = imageService;
     }
 
 
@@ -69,26 +75,45 @@ public class LivreDashboardController extends AbstractController {
 
     @PostMapping("/creer")
     public String creerLivre(
-            @ModelAttribute @Valid Livre livre,
+            @ModelAttribute("livre") @Valid Livre livre,
             BindingResult result,
+            @RequestParam(name = "fichierCouverture", required = false) MultipartFile fichierCouverture,
             Model model,
             RedirectAttributes redirectAttributes) {
+                livre.setCouverture(null);
 
         if (livre.getTitre() == null || livre.getTitre().isEmpty()) {
             result.rejectValue("titre", "error.livre", "Le titre du livre ne peut pas être vide");
+        }
+
+        if (livre.getCopiesDisponibles() == null || livre.getCopiesDisponibles() < 0) {
+            result.rejectValue("copiesDisponibles", "error.livre", "Le nombre de copies doit être positif ou nul");
         }
 
         if (result.hasErrors()) {
             return renderView(model, "dashboard/livres/creer_livre", "Créer un livre");
         }
 
-        livreService.createLivre(livre);
-        addSuccessMessage(redirectAttributes, "Livre créée avec succès");
-        return "redirect:/dashboard/livres";
+        try {
+            // Sauvegarde de l'image de couverture si fournie
+            if (fichierCouverture != null && !fichierCouverture.isEmpty()) {
+                String imagePath = imageService.saveImage(fichierCouverture, "livre");
+                livre.setCouverture(imagePath);
+            }
+            
+            livreService.createLivre(livre);
+            addSuccessMessage(redirectAttributes, "Livre créé avec succès");
+            return "redirect:/dashboard/livres";
+        } catch (IOException e) {
+            result.reject("error.upload", "Erreur lors de l'upload de l'image: " + e.getMessage());
+            return renderView(model, "dashboard/livres/creer_livre", "Créer un livre");
+        }
     }
 
     @GetMapping("/{id}/modifier")
-    public String afficherFormulaireModificationLivre(@PathVariable() Long id, Model model, RedirectAttributes redirectAttributes) {
+    public String afficherFormulaireModificationLivre(
+        @PathVariable() Long id, 
+        Model model, RedirectAttributes redirectAttributes) {
         Optional<Livre> livreOpt = livreService.getLivreById(id);
         
         if (livreOpt.isEmpty()) {
@@ -105,30 +130,60 @@ public class LivreDashboardController extends AbstractController {
             @PathVariable() Long id,
             @ModelAttribute @Valid Livre livre,
             BindingResult result,
+            @RequestParam(name = "fichierCouverture", required = false) MultipartFile fichierCouverture,
             Model model,
             RedirectAttributes redirectAttributes) {
         
         Optional<Livre> livreExistanteOpt = livreService.getLivreById(id);
-        
+
         if (livreExistanteOpt.isEmpty()) {
             addErrorMessage(redirectAttributes, "Livre non trouvé");
             return "redirect:/dashboard/livres";
         }
-        
-        // Vérifier que le titre n'est pas vide
+
+        // Validation
         if (livre.getTitre() == null || livre.getTitre().isEmpty()) {
-            result.rejectValue("titre", "error.livre", "Le titre dulivre ne peut pas être vide");
+            result.rejectValue("titre", "error.livre", "Le titre du livre ne peut pas être vide");
+        }
+        
+        if (livre.getCopiesDisponibles() == null || livre.getCopiesDisponibles() < 0) {
+            result.rejectValue("copiesDisponibles", "error.livre", "Le nombre de copies doit être positif ou nul");
+        }
+
+        if (livre.getDatePublication() != null && livre.getDatePublication().isAfter(LocalDate.now())) {
+            result.rejectValue("datePublication", "error.livre", "La date de publication ne peut pas être dans le futur");
         }
         
         if (result.hasErrors()) {
             return renderView(model, "dashboard/livres/modifier_livre", "Modifier le livre");
         }
         
-        livre.setId(id);
-        livreService.updateLivre(livre);
-        
-        addSuccessMessage(redirectAttributes, "Livre modifiée avec succès");
-        return "redirect:/dashboard/livres";
+        try {
+            Livre livreExistant = livreExistanteOpt.get();
+            
+            // Préserver la couverture existante si aucune nouvelle n'est fournie
+            if (fichierCouverture == null || fichierCouverture.isEmpty()) {
+                livre.setCouverture(livreExistant.getCouverture());
+            } else {
+                // Supprimer l'ancienne image si elle existe
+                if (livreExistant.getCouverture() != null && !livreExistant.getCouverture().isEmpty()) {
+                    imageService.deleteImage(livreExistant.getCouverture(), "livre");
+                }
+                
+                // Sauvegarder la nouvelle image
+                String imagePath = imageService.saveImage(fichierCouverture, "livre");
+                livre.setCouverture(imagePath);
+            }
+            
+            livre.setId(id);
+            livreService.updateLivre(livre);
+            
+            addSuccessMessage(redirectAttributes, "Livre modifié avec succès");
+            return "redirect:/dashboard/livres";
+        } catch (IOException e) {
+            result.reject("error.upload", "Erreur lors de l'upload de l'image: " + e.getMessage());
+            return renderView(model, "dashboard/livres/modifier_livre", "Modifier le livre");
+        }
     }
 
     @GetMapping("/{id}/supprimer")
@@ -154,6 +209,11 @@ public class LivreDashboardController extends AbstractController {
         }
         
         try {
+            Livre livreExistant = livreOpt.get();
+
+            if (livreExistant.getCouverture() != null && !livreExistant.getCouverture().isEmpty()) {
+                    imageService.deleteImage(livreExistant.getCouverture(), "livre");
+                }
             livreService.deleteLivre(id);
             addSuccessMessage(redirectAttributes, "Livre supprimée avec succès");
         } catch (Exception e) {
