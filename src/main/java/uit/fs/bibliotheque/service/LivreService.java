@@ -2,12 +2,14 @@ package uit.fs.bibliotheque.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import uit.fs.bibliotheque.model.Auteur;
 import uit.fs.bibliotheque.model.Livre;
 import uit.fs.bibliotheque.repository.LivreRepository;
 
@@ -15,9 +17,11 @@ import uit.fs.bibliotheque.repository.LivreRepository;
 public class LivreService {
 
     private final LivreRepository livreRepository;
+    private final AuteurService auteurService;
 
-    public LivreService(LivreRepository livreRepository) {
+    public LivreService(LivreRepository livreRepository, AuteurService auteurService) {
         this.livreRepository = livreRepository;
+        this.auteurService = auteurService;
     }
 
     public List<Livre> getAllLivres() {
@@ -32,7 +36,7 @@ public class LivreService {
         if (searchTerm == null || searchTerm.trim().isEmpty()) {
             return livreRepository.findAll(pageable);
         }
-        return livreRepository.findByTitre(searchTerm,pageable);
+        return livreRepository.findByTitre(searchTerm, pageable);
     }
 
     public Optional<Livre> getLivreById(Long id) {
@@ -54,7 +58,33 @@ public class LivreService {
         livreRepository.deleteById(id);
     }
 
+    @Transactional
+    public Livre addAuteurToLivre(Long livreId, Long auteurId) {
+        Livre livre = livreRepository.findById(livreId)
+            .orElseThrow(() -> new RuntimeException("Livre non trouvé"));
+        
+        Auteur auteur = auteurService.getAuteurById(auteurId)
+            .orElseThrow(() -> new RuntimeException("Auteur non trouvé"));
+        
+        livre.addAuteur(auteur);
+        return livreRepository.save(livre);
+    }
 
+    @Transactional
+    public Livre removeAuteurFromLivre(Long livreId, Long auteurId) {
+        Livre livre = livreRepository.findById(livreId)
+            .orElseThrow(() -> new RuntimeException("Livre non trouvé"));
+        
+        Auteur auteur = auteurService.getAuteurById(auteurId)
+            .orElseThrow(() -> new RuntimeException("Auteur non trouvé"));
+        
+        livre.removeAuteur(auteur);
+        return livreRepository.save(livre);
+    }
 
-
+    public Set<Auteur> getLivreAuteurs(Long livreId) {
+        return livreRepository.findById(livreId)
+            .map(Livre::getAuteurs)
+            .orElseThrow(() -> new RuntimeException("Livre non trouvé"));
+    }
 }

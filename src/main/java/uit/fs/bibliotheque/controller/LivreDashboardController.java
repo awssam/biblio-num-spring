@@ -2,6 +2,7 @@ package uit.fs.bibliotheque.controller;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
 import uit.fs.bibliotheque.model.Livre;
+import uit.fs.bibliotheque.service.AuteurService;
 import uit.fs.bibliotheque.service.ImageService;
 import uit.fs.bibliotheque.service.LivreService;
 
@@ -36,10 +38,12 @@ public class LivreDashboardController extends AbstractController {
 
     private final LivreService livreService;
     private final ImageService imageService;
+    private final AuteurService auteurService;
 
-    public LivreDashboardController(LivreService livreService, ImageService imageService) {
+    public LivreDashboardController(LivreService livreService, ImageService imageService, AuteurService auteurService) {
         this.livreService = livreService;
         this.imageService = imageService;
+        this.auteurService = auteurService;
     }
 
 
@@ -69,6 +73,7 @@ public class LivreDashboardController extends AbstractController {
     @GetMapping("/creer")
     public String afficherFormulaireCreationLivre(Model model) {
         model.addAttribute("livre", new Livre());
+        model.addAttribute("auteurs", auteurService.getAllAuteurs());
         return renderView(model, "dashboard/livres/creer_livre", "Créer un livre");
     }
 
@@ -78,6 +83,7 @@ public class LivreDashboardController extends AbstractController {
             @ModelAttribute("livre") @Valid Livre livre,
             BindingResult result,
             @RequestParam(name = "fichierCouverture", required = false) MultipartFile fichierCouverture,
+            @RequestParam(name = "auteursIds", required = false) List<Long> auteursIds,
             Model model,
             RedirectAttributes redirectAttributes) {
                 livre.setCouverture(null);
@@ -101,6 +107,13 @@ public class LivreDashboardController extends AbstractController {
                 livre.setCouverture(imagePath);
             }
             
+            // Ajouter les auteurs sélectionnés
+            if (auteursIds != null && !auteursIds.isEmpty()) {
+                auteursIds.forEach(auteurId -> {
+                    auteurService.getAuteurById(auteurId).ifPresent(livre::addAuteur);
+                });
+            }
+            
             livreService.createLivre(livre);
             addSuccessMessage(redirectAttributes, "Livre créé avec succès");
             return "redirect:/dashboard/livres";
@@ -122,6 +135,7 @@ public class LivreDashboardController extends AbstractController {
         }
         
         model.addAttribute("livre", livreOpt.get());
+        model.addAttribute("auteurs", auteurService.getAllAuteurs());
         return renderView(model, "dashboard/livres/modifier_livre", "Modifier le livre");
     }
     
@@ -131,6 +145,7 @@ public class LivreDashboardController extends AbstractController {
             @ModelAttribute @Valid Livre livre,
             BindingResult result,
             @RequestParam(name = "fichierCouverture", required = false) MultipartFile fichierCouverture,
+            @RequestParam(name = "auteursIds", required = false) List<Long> auteursIds,
             Model model,
             RedirectAttributes redirectAttributes) {
         
@@ -176,6 +191,15 @@ public class LivreDashboardController extends AbstractController {
             }
             
             livre.setId(id);
+            
+            // Gérer les auteurs
+            livre.getAuteurs().clear();
+            if (auteursIds != null && !auteursIds.isEmpty()) {
+                auteursIds.forEach(auteurId -> {
+                    auteurService.getAuteurById(auteurId).ifPresent(livre::addAuteur);
+                });
+            }
+            
             livreService.updateLivre(livre);
             
             addSuccessMessage(redirectAttributes, "Livre modifié avec succès");
