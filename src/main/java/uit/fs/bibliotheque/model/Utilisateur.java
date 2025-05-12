@@ -12,7 +12,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -107,10 +106,10 @@ public class Utilisateur implements UserDetails {
     }
     
     public boolean isAdmin() {
-        return RoleConstants.ADMINISTRATEUR.equals(role);
+        return RoleConstants.ADMINISTRATEUR.equalsIgnoreCase(role);
     }
 
     public boolean isMember() {
-        return RoleConstants.MEMBRE.equals(role);
+        return RoleConstants.MEMBRE.equalsIgnoreCase(role);
     }
 }

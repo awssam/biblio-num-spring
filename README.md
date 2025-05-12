@@ -3,6 +3,11 @@
 ## Description
 BiblioNum est une application de gestion de bibliothèque numérique développée avec Spring Boot. Le projet est en cours de développement et se concentre actuellement sur la gestion des utilisateurs et l'authentification.
 
+## Captures d'écran
+### Page d'inscription
+![Page d'inscription](docs/images/inscription.jpeg)
+
+
 ## Création du Projet
 Ce projet a été créé avec [Spring Initializr](https://start.spring.io/) en utilisant les paramètres suivants :
 - **Type de projet** : Maven
@@ -89,7 +94,31 @@ mvn spring-boot:run
 3. Accédez à l'application via : `http://localhost:8080`
 
 ## Documentation
-Pour plus d'informations, consultez la documentation des APIs et des URLs dans le fichier de documentation du projet.
+Pour plus d'informations, consultez:
+- [Documentation des catégories](docs/categories.md) - Gestion des catégories de livres
+- Documentation des APIs et des URLs dans le fichier de documentation du projet
+
 
 ## Licence
-[Veuillez spécifier la licence ici]
+MIT License
+
+Copyright (c) 2025 
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+

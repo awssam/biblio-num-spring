@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/base}">
+
+<head>
+    <th:block th:fragment="title">
+        <title>Modifier la catégorie Biblio UIT</title>
+    </th:block>
+</head>
+
+<body>
+    <main layout:fragment="content">
+        
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h4 class="mb-0">Modifier la catégorie : <span th:text="${categorie.nom}">Nom de la catégorie</span></h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" th:action="@{/dashboard/categories/{id}/modifier(id=${categorie.id})}" th:object="${categorie}">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                            <div class="mb-3">
+                                <label for="nom" class="form-label">Nom de la catégorie</label>
+                                <input type="text" th:field="*{nom}" id="nom" class="form-control" th:classappend="${#fields.hasErrors('nom')} ? 'is-invalid'" />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}">Erreur dans le nom</div>
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <a th:href="@{/dashboard/categories}" class="btn btn-secondary">Annuler</a>
+                                <button type="submit" class="btn btn-success">Enregistrer les modifications</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
