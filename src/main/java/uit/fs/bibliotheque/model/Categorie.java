@@ -57,4 +57,8 @@ public class Categorie {
         this.livres.remove(livre);
         livre.getCategories().remove(this);
     }
+
+    public Number getNombreLivres() {
+        return livres.size();
+    }
 }
