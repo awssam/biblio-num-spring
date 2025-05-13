@@ -2,11 +2,13 @@ package uit.fs.bibliotheque.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import uit.fs.bibliotheque.model.Auteur;
 import uit.fs.bibliotheque.model.Livre;
@@ -49,6 +51,21 @@ public class DashboardAccueilController extends AbstractController {
         model.addAttribute("recentAuthors", recentAuthors);
 
         return renderView(model, "dashboard/accueil", "Dashboard Accueil");
+    }
+    
+   
+    @GetMapping("/recent-livres")
+    @ResponseBody
+    public ResponseEntity<List<Livre>> getRecentBooks() {
+        List<Livre> recentBooks = dashboardService.getRecentBooks();
+        return ResponseEntity.ok(recentBooks);
+    }
+    
+    @GetMapping("/recent-auteurs")
+    @ResponseBody
+    public ResponseEntity<List<Auteur>> getRecentAuthors() {
+        List<Auteur> recentAuthors = dashboardService.getRecentAuthors();
+        return ResponseEntity.ok(recentAuthors);
     }
 
 }

@@ -14,7 +14,7 @@
             height: 100%;
         }
         .dashboard-card:hover {
-            transform: translateY(-5px);
+            /* transform: translateY(-5px); */
             box-shadow: 0 10px 20px rgba(0,0,0,0.12), 0 4px 8px rgba(0,0,0,0.06);
         }
         .dashboard-icon {
@@ -26,7 +26,7 @@
             font-weight: bold;
         }
         .welcome-section {
-            background: linear-gradient(135deg, #4a6bff 0%, #2948ff 100%);
+            background: linear-gradient(135deg, #e2641b 0%, #ee4141 100%);
             color: white;
             border-radius: 15px;
             padding: 2rem;
@@ -74,7 +74,7 @@
     <main layout:fragment="content">
         <div class="container-fluid py-4">
             <!-- Section de bienvenue -->
-            <div class="welcome-section mb-4">
+            <div class="welcome-section mb-4 hover-float">
                 <h1 class="display-5 fw-bold">Bienvenue dans votre bibliothèque numérique</h1>
                 <p class="lead">Explorez et gérez votre collection en toute simplicité</p>
                 <hr class="my-4 bg-white">
@@ -84,7 +84,7 @@
             <!-- Cartes de statistiques -->
             <div class="row g-4">
                 <!-- Carte Livres -->
-                <div class="col-xl-3 col-md-6">
+                <div class="col-xl-3 col-md-6 hover-float">
                     <div class="card dashboard-card bg-primary text-white">
                         <div class="card-body text-center">
                             <div class="dashboard-icon">
@@ -97,7 +97,7 @@
                 </div>
                 
                 <!-- Carte Auteurs -->
-                <div class="col-xl-3 col-md-6">
+                <div class="col-xl-3 col-md-6 hover-float">
                     <div class="card dashboard-card bg-success text-white">
                         <div class="card-body text-center">
                             <div class="dashboard-icon">
@@ -110,7 +110,7 @@
                 </div>
                 
                 <!-- Carte Catégories -->
-                <div class="col-xl-3 col-md-6">
+                <div class="col-xl-3 col-md-6 hover-float">
                     <div class="card dashboard-card bg-warning text-white">
                         <div class="card-body text-center">
                             <div class="dashboard-icon">
@@ -123,7 +123,7 @@
                 </div>
                 
                 <!-- Carte Utilisateurs -->
-                <div class="col-xl-3 col-md-6">
+                <div class="col-xl-3 col-md-6 hover-float">
                     <div class="card dashboard-card bg-danger text-white">
                         <div class="card-body text-center">
                             <div class="dashboard-icon">
@@ -180,62 +180,26 @@
                 </div>
             </div>
             
-            <!-- Section des derniers éléments ajoutés -->
             <div class="row mt-4 g-4">
-                <!-- Derniers livres ajoutés -->
-                <div class="col-md-6">
-                    <div class="card dashboard-card h-100">
-                        <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0">Derniers livres ajoutés</h5>
-                            <a href="/dashboard/livres" class="btn btn-sm btn-primary">Voir tous</a>
-                        </div>
-                        <div class="card-body">
-                            <div th:if="${recentBooks.empty}" class="text-center py-3">
-                                <i class="fas fa-book-open text-muted mb-3" style="font-size: 3rem;"></i>
-                                <p class="text-muted">Aucun livre n'a été ajouté récemment.</p>
-                            </div>
-                            <div th:if="${!recentBooks.empty}">
-                                <div th:each="livre : ${recentBooks}" class="recent-item recent-item-book">
-                                    <h6 th:text="${livre.titre}">Titre du livre</h6>
-                                    <div class="d-flex justify-content-between">
-                                        <p th:text="${livre.auteur != null ? livre.auteur.nomComplet() : 'Auteur inconnu'}">Auteur</p>
-                                        <p th:if="${livre.dateCreation != null}" th:text="${#temporals.format(livre.dateCreation, 'dd/MM/yyyy')}">Date</p>
-                                    </div>
-                                    <a th:href="@{'/dashboard/livres/edit/' + ${livre.id}}" class="stretched-link"></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-md-6" id="recent-books-container">
+                    <recent-books></recent-books>
                 </div>
                 
-                <!-- Derniers auteurs ajoutés -->
-                <div class="col-md-6">
-                    <div class="card dashboard-card h-100">
-                        <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0">Derniers auteurs ajoutés</h5>
-                            <a href="/dashboard/auteurs" class="btn btn-sm btn-success">Voir tous</a>
-                        </div>
-                        <div class="card-body">
-                            <div th:if="${recentAuthors.empty}" class="text-center py-3">
-                                <i class="fas fa-user-edit text-muted mb-3" style="font-size: 3rem;"></i>
-                                <p class="text-muted">Aucun auteur n'a été ajouté récemment.</p>
-                            </div>
-                            <div th:if="${!recentAuthors.empty}">
-                                <div th:each="auteur : ${recentAuthors}" class="recent-item recent-item-author">
-                                    <h6 th:text="${auteur.nomComplet()}">Nom de l'auteur</h6>
-                                    <div class="d-flex justify-content-between">
-                                        <p th:text="${auteur.nationalite ?: 'Nationalité non spécifiée'}">Nationalité</p>
-                                        <p th:if="${auteur.dateCreation != null}" th:text="${#temporals.format(auteur.dateCreation, 'dd/MM/yyyy')}">Date</p>
-                                    </div>
-                                    <a th:href="@{'/dashboard/auteurs/edit/' + ${auteur.id}}" class="stretched-link"></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-md-6" id="recent-authors-container">
+                    <recent-authors></recent-authors>
                 </div>
             </div>
         </div>
+
+    <!-- Scripts Vue.js -->
+    <th:block layout:fragment="scripts">
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+        <script th:src="@{/js/vue-components/RecentBooksComponent.js}"></script>
+        <script th:src="@{/js/vue-components/RecentAuthorsComponent.js}"></script>
+        <script th:src="@{/js/vue-components/main.js}"></script>
+    </th:block>
     </main>
+    
 </body>
 
 </html>
