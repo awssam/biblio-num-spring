@@ -10,6 +10,17 @@ if [ ! -f /data/bibliodb.sqlite ]; then
   sqlite3 /data/bibliodb.sqlite "PRAGMA journal_mode=WAL;"
   
   echo "Database created successfully."
+  
+  # Set admin password for first run
+  # Generate a secure random password if ADMIN_PASSWORD is not set
+  if [ -z "$ADMIN_PASSWORD" ]; then
+    ADMIN_PASSWORD=$(tr -dc 'A-Za-z0-9!@#$%^&*' < /dev/urandom | head -c 12)
+    echo "Generated random admin password: $ADMIN_PASSWORD"
+  fi
+  
+  # Add admin password to Java options
+  export JAVA_OPTS="$JAVA_OPTS -Dadmin.password=$ADMIN_PASSWORD"
+  echo "Admin user will be created with the specified or generated password."
 fi
 
 # Make sure permissions are correct
