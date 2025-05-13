@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  biblio-app:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./target/bibliotheque-0.0.1-SNAPSHOT.war:/app/app.war
+      - ./bibliodb.sqlite:/app/bibliodb.sqlite
+      - ./uploads:/app/uploads
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
