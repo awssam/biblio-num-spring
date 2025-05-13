@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/base}">
+
+<head>
+    <!-- Bloc pour le titre -->
+    <th:block th:fragment="title">
+        <title>Dashboard | Bibliothèque Numérique</title>
+    </th:block>
+    <style>
+        .dashboard-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 15px;
+            overflow: hidden;
+            height: 100%;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12), 0 4px 8px rgba(0,0,0,0.06);
+        }
+        .dashboard-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .card-counter {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        .welcome-section {
+            background: linear-gradient(135deg, #4a6bff 0%, #2948ff 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        .recent-item {
+            border-left: 4px solid transparent;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s ease;
+            background-color: #f8f9fa;
+            border-radius: 0 8px 8px 0;
+        }
+        .recent-item:hover {
+            border-left-color: #007bff;
+            background-color: #e9ecef;
+            transform: translateX(5px);
+        }
+        .recent-item h6 {
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+        .recent-item p {
+            margin-bottom: 0;
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+        .recent-item-book {
+            border-left-color: #007bff;
+        }
+        .recent-item-author {
+            border-left-color: #28a745;
+        }
+        .see-all {
+            display: block;
+            text-align: right;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Contenu de la page -->
+    <main layout:fragment="content">
+        <div class="container-fluid py-4">
+            <!-- Section de bienvenue -->
+            <div class="welcome-section mb-4">
+                <h1 class="display-5 fw-bold">Bienvenue dans votre bibliothèque numérique</h1>
+                <p class="lead">Explorez et gérez votre collection en toute simplicité</p>
+                <hr class="my-4 bg-white">
+                <p>Vous trouverez ci-dessous les statistiques importantes de votre bibliothèque.</p>
+            </div>
+            
+            <!-- Cartes de statistiques -->
+            <div class="row g-4">
+                <!-- Carte Livres -->
+                <div class="col-xl-3 col-md-6">
+                    <div class="card dashboard-card bg-primary text-white">
+                        <div class="card-body text-center">
+                            <div class="dashboard-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <h5 class="card-counter" th:text="${countOfAllBooks}">0</h5>
+                            <p class="card-text">Livres</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carte Auteurs -->
+                <div class="col-xl-3 col-md-6">
+                    <div class="card dashboard-card bg-success text-white">
+                        <div class="card-body text-center">
+                            <div class="dashboard-icon">
+                                <i class="fas fa-user-edit"></i>
+                            </div>
+                            <h5 class="card-counter" th:text="${countOfAllAuthors}">0</h5>
+                            <p class="card-text">Auteurs</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carte Catégories -->
+                <div class="col-xl-3 col-md-6">
+                    <div class="card dashboard-card bg-warning text-white">
+                        <div class="card-body text-center">
+                            <div class="dashboard-icon">
+                                <i class="fas fa-tags"></i>
+                            </div>
+                            <h5 class="card-counter" th:text="${countOfAllCategories}">0</h5>
+                            <p class="card-text">Catégories</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carte Utilisateurs -->
+                <div class="col-xl-3 col-md-6">
+                    <div class="card dashboard-card bg-danger text-white">
+                        <div class="card-body text-center">
+                            <div class="dashboard-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h5 class="card-counter" th:text="${countOfAllUsers}">0</h5>
+                            <p class="card-text">Utilisateurs</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sections supplémentaires -->
+            <div class="row mt-4 g-4">
+                <!-- Section d'actions rapides -->
+                <div class="col-md-6">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-header bg-light">
+                            <h5 class="card-title mb-0">Actions rapides</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-3">
+                                <a href="/dashboard/livres/creer" class="btn btn-outline-primary">
+                                    <i class="fas fa-plus-circle me-2"></i>Ajouter un livre
+                                </a>
+                                <a href="/dashboard/auteurs/creer" class="btn btn-outline-success">
+                                    <i class="fas fa-user-plus me-2"></i>Ajouter un auteur
+                                </a>
+                                <a href="/dashboard/categories/creer" class="btn btn-outline-warning">
+                                    <i class="fas fa-folder-plus me-2"></i>Ajouter une catégorie
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section d'informations -->
+                <div class="col-md-6">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-header bg-light">
+                            <h5 class="card-title mb-0">À propos de la bibliothèque</h5>
+                        </div>
+                        <div class="card-body">
+                            <p>La bibliothèque numérique vous permet de gérer efficacement votre collection de livres, d'auteurs et de catégories.</p>
+                            <p>Utilisez les différentes sections du tableau de bord pour:</p>
+                            <ul>
+                                <li>Ajouter, modifier et supprimer des livres</li>
+                                <li>Gérer les informations sur les auteurs</li>
+                                <li>Organiser les livres par catégories</li>
+                                <li>Administrer les comptes utilisateurs</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section des derniers éléments ajoutés -->
+            <div class="row mt-4 g-4">
+                <!-- Derniers livres ajoutés -->
+                <div class="col-md-6">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Derniers livres ajoutés</h5>
+                            <a href="/dashboard/livres" class="btn btn-sm btn-primary">Voir tous</a>
+                        </div>
+                        <div class="card-body">
+                            <div th:if="${recentBooks.empty}" class="text-center py-3">
+                                <i class="fas fa-book-open text-muted mb-3" style="font-size: 3rem;"></i>
+                                <p class="text-muted">Aucun livre n'a été ajouté récemment.</p>
+                            </div>
+                            <div th:if="${!recentBooks.empty}">
+                                <div th:each="livre : ${recentBooks}" class="recent-item recent-item-book">
+                                    <h6 th:text="${livre.titre}">Titre du livre</h6>
+                                    <div class="d-flex justify-content-between">
+                                        <p th:text="${livre.auteur != null ? livre.auteur.nomComplet() : 'Auteur inconnu'}">Auteur</p>
+                                        <p th:if="${livre.dateCreation != null}" th:text="${#temporals.format(livre.dateCreation, 'dd/MM/yyyy')}">Date</p>
+                                    </div>
+                                    <a th:href="@{'/dashboard/livres/edit/' + ${livre.id}}" class="stretched-link"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Derniers auteurs ajoutés -->
+                <div class="col-md-6">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Derniers auteurs ajoutés</h5>
+                            <a href="/dashboard/auteurs" class="btn btn-sm btn-success">Voir tous</a>
+                        </div>
+                        <div class="card-body">
+                            <div th:if="${recentAuthors.empty}" class="text-center py-3">
+                                <i class="fas fa-user-edit text-muted mb-3" style="font-size: 3rem;"></i>
+                                <p class="text-muted">Aucun auteur n'a été ajouté récemment.</p>
+                            </div>
+                            <div th:if="${!recentAuthors.empty}">
+                                <div th:each="auteur : ${recentAuthors}" class="recent-item recent-item-author">
+                                    <h6 th:text="${auteur.nomComplet()}">Nom de l'auteur</h6>
+                                    <div class="d-flex justify-content-between">
+                                        <p th:text="${auteur.nationalite ?: 'Nationalité non spécifiée'}">Nationalité</p>
+                                        <p th:if="${auteur.dateCreation != null}" th:text="${#temporals.format(auteur.dateCreation, 'dd/MM/yyyy')}">Date</p>
+                                    </div>
+                                    <a th:href="@{'/dashboard/auteurs/edit/' + ${auteur.id}}" class="stretched-link"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

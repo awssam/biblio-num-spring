@@ -69,4 +69,8 @@ public class Auteur {
         this.livres.remove(livre);
         livre.getAuteurs().remove(this);
     }
+
+    public Number getNombreLivres() {
+        return livres.size();
+    }
 }
