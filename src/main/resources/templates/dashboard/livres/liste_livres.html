@@ -127,7 +127,10 @@
                                                 <span th:text="${livre.getBeautifulAuteurs()}">Auteurs</span>
                                             </td>
 
-                                            <td>cats</td>
+                                            <td>
+                                                <span th:text="${livre.getBeautifulCategories()}">Categories</span>
+
+                                            </td>
                                             <td th:text="${livre.copiesDisponibles}">0</td>
 
                                             <td>

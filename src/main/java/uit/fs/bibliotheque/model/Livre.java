@@ -29,8 +29,8 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"auteurs"})
-@ToString(exclude = {"auteurs"})
+@EqualsAndHashCode(exclude = {"auteurs", "categories"})
+@ToString(exclude = {"auteurs", "categories"})
 public class Livre {
 
     @Id
@@ -63,6 +63,14 @@ public class Livre {
         inverseJoinColumns = @JoinColumn(name = "auteur_id")
     )
     private Set<Auteur> auteurs = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "livre_categorie",
+        joinColumns = @JoinColumn(name = "livre_id"),
+        inverseJoinColumns = @JoinColumn(name = "categorie_id")
+    )
+    private Set<Categorie> categories = new HashSet<>();
 
     @PrePersist
     protected void onCreate() {
@@ -124,7 +132,6 @@ public class Livre {
         return "Titre non disponible";
     }
 
-    // Méthode pour formater le nom d'un auteur avec initiales
     private String formatAuteurInitiales(Auteur auteur, boolean nomComplet) {
         String nom = auteur.getNom();
         String prenom = auteur.getPrenom();
@@ -142,8 +149,20 @@ public class Livre {
         }
         return "Inconnu";
     }
+    
+    public String getBeautifulCategories() {
+        if (categories != null && !categories.isEmpty()) {
+            StringBuilder categoriesComplet = new StringBuilder();
+            categories.forEach(categorie -> 
+                categoriesComplet.append(categorie.getNom()).append(", "));
+            // Enlever la dernière virgule et espace
+            categoriesComplet.setLength(categoriesComplet.length() - 2);
+            return categoriesComplet.toString();
+        }
+        return "Catégories non disponibles";
+    }
+    
 
-    // Méthode pour obtenir le nom de la couverture
     public String getCouvertureURL() {
         if (couverture != null && !couverture.isEmpty()) {
             return couverture;
@@ -160,5 +179,26 @@ public class Livre {
     public void removeAuteur(Auteur auteur) {
         this.auteurs.remove(auteur);
         auteur.getLivres().remove(this);
+    }
+
+    // public get Auteurs
+    public Set<Auteur> getAuteurs() {
+        return auteurs;
+    }
+
+    // Méthodes utilitaires pour gérer la relation avec les catégories
+    public void addCategorie(Categorie categorie) {
+        this.categories.add(categorie);
+        categorie.getLivres().add(this);
+    }
+
+    public void removeCategorie(Categorie categorie) {
+        this.categories.remove(categorie);
+        categorie.getLivres().remove(this);
+    }
+
+    // Getter pour categories
+    public Set<Categorie> getCategories() {
+        return categories;
     }
 }

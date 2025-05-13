@@ -25,6 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.validation.Valid;
 import uit.fs.bibliotheque.model.Livre;
 import uit.fs.bibliotheque.service.AuteurService;
+import uit.fs.bibliotheque.service.CategorieService;
 import uit.fs.bibliotheque.service.ImageService;
 import uit.fs.bibliotheque.service.LivreService;
 
@@ -39,11 +40,13 @@ public class LivreDashboardController extends AbstractController {
     private final LivreService livreService;
     private final ImageService imageService;
     private final AuteurService auteurService;
+    private final CategorieService categorieService;
 
-    public LivreDashboardController(LivreService livreService, ImageService imageService, AuteurService auteurService) {
+    public LivreDashboardController(LivreService livreService, ImageService imageService, AuteurService auteurService, CategorieService categorieService) {
         this.livreService = livreService;
         this.imageService = imageService;
         this.auteurService = auteurService;
+        this.categorieService = categorieService;
     }
 
 
@@ -74,6 +77,7 @@ public class LivreDashboardController extends AbstractController {
     public String afficherFormulaireCreationLivre(Model model) {
         model.addAttribute("livre", new Livre());
         model.addAttribute("auteurs", auteurService.getAllAuteurs());
+        model.addAttribute("categories", categorieService.getAllCategories());
         return renderView(model, "dashboard/livres/creer_livre", "Créer un livre");
     }
 
@@ -84,6 +88,7 @@ public class LivreDashboardController extends AbstractController {
             BindingResult result,
             @RequestParam(name = "fichierCouverture", required = false) MultipartFile fichierCouverture,
             @RequestParam(name = "auteursIds", required = false) List<Long> auteursIds,
+            @RequestParam(name = "categoriesIds", required = false) List<Long> categoriesIds,
             Model model,
             RedirectAttributes redirectAttributes) {
                 livre.setCouverture(null);
@@ -113,6 +118,12 @@ public class LivreDashboardController extends AbstractController {
                     auteurService.getAuteurById(auteurId).ifPresent(livre::addAuteur);
                 });
             }
+            // Ajouter les catégories sélectionnées
+            if (categoriesIds != null && !categoriesIds.isEmpty()) {
+                categoriesIds.forEach(categorieId -> {
+                    categorieService.getCategorieById(categorieId).ifPresent(livre::addCategorie);
+                });
+            }
             
             livreService.createLivre(livre);
             addSuccessMessage(redirectAttributes, "Livre créé avec succès");
@@ -136,6 +147,7 @@ public class LivreDashboardController extends AbstractController {
         
         model.addAttribute("livre", livreOpt.get());
         model.addAttribute("auteurs", auteurService.getAllAuteurs());
+        model.addAttribute("categories", categorieService.getAllCategories());
         return renderView(model, "dashboard/livres/modifier_livre", "Modifier le livre");
     }
     
@@ -146,6 +158,7 @@ public class LivreDashboardController extends AbstractController {
             BindingResult result,
             @RequestParam(name = "fichierCouverture", required = false) MultipartFile fichierCouverture,
             @RequestParam(name = "auteursIds", required = false) List<Long> auteursIds,
+            @RequestParam(name = "categoriesIds", required = false) List<Long> categoriesIds,
             Model model,
             RedirectAttributes redirectAttributes) {
         
@@ -197,6 +210,13 @@ public class LivreDashboardController extends AbstractController {
             if (auteursIds != null && !auteursIds.isEmpty()) {
                 auteursIds.forEach(auteurId -> {
                     auteurService.getAuteurById(auteurId).ifPresent(livre::addAuteur);
+                });
+            }
+            // Gérer les catégories
+            livre.getCategories().clear();
+            if (categoriesIds != null && !categoriesIds.isEmpty()) {
+                categoriesIds.forEach(categorieId -> {
+                    categorieService.getCategorieById(categorieId).ifPresent(livre::addCategorie);
                 });
             }
             

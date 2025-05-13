@@ -130,6 +130,18 @@
                             </div>
 
                             <div class="mb-3">
+                                <label for="categories" class="form-label">Catégories</label>
+                                <select class="form-control select2-auteurs" id="categories" name="categoriesIds" multiple="multiple">
+                                    <option th:each="categorie : ${categories}" 
+                                            th:value="${categorie.id}" 
+                                            th:text="${categorie.nom}"
+                                            th:selected="${livre.categories != null and livre.categories.contains(categorie)}">
+                                    </option>
+                                </select>
+                                <small class="form-text text-muted">Sélectionnez une ou plusieurs catégories</small>
+                            </div>
+
+                            <div class="mb-3">
                                 <label for="resume" class="form-label">Résumé du livre</label>
                                 <textarea th:field="*{resume}" id="resume" class="form-control" rows="5"
                                     th:classappend="${#fields.hasErrors('resume')} ? 'is-invalid'"></textarea>
