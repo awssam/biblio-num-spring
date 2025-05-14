@@ -28,6 +28,7 @@ public class UtilisateurController extends AbstractController {
     // Constantes pour la validation du mot de passe
     private static final int MIN_PASSWORD_LENGTH = 8;
     // private static final int MAX_PASSWORD_LENGTH = 128;
+    // demo
 
     public UtilisateurController(
             UtilisateurService utilisateurService) {
