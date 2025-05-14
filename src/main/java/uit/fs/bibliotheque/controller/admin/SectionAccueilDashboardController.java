@@ -1,4 +1,4 @@
-package uit.fs.bibliotheque.controller;
+package uit.fs.bibliotheque.controller.admin;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,13 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
+import uit.fs.bibliotheque.controller.AbstractController;
 import uit.fs.bibliotheque.model.SectionAccueil;
 import uit.fs.bibliotheque.service.AccueilService;
 import uit.fs.bibliotheque.service.CategorieService;
 
 @Controller
 @RequestMapping("/dashboard/sections-accueil")
-@PreAuthorize("hasRole('MEMBRE') or hasRole('ADMINISTRATEUR')")
+@PreAuthorize("hasRole('ADMINISTRATEUR')")
 /**
  * Contrôleur pour la gestion des sections d'accueil dans le tableau de bord.
  */

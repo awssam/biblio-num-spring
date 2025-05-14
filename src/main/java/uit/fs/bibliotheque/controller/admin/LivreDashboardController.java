@@ -1,4 +1,4 @@
-package uit.fs.bibliotheque.controller;
+package uit.fs.bibliotheque.controller.admin;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
+import uit.fs.bibliotheque.controller.AbstractController;
 import uit.fs.bibliotheque.model.Livre;
 import uit.fs.bibliotheque.service.AuteurService;
 import uit.fs.bibliotheque.service.CategorieService;
@@ -31,7 +32,7 @@ import uit.fs.bibliotheque.service.LivreService;
 
 @Controller
 @RequestMapping("/dashboard/livres")
-@PreAuthorize("hasRole('MEMBRE') or hasRole('ADMINISTRATEUR')")
+@PreAuthorize("hasRole('ADMINISTRATEUR')")
 /**
  * Contrôleur pour la gestion des livres dans le tableau de bord.
  */

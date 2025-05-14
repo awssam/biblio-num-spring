@@ -9,27 +9,27 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (document.getElementById('recent-books-container')) {
 
-        if (typeof RecentBooksComponent === 'undefined') {
-            console.error('RecentBooksComponent n\'est pas défini');
+        if (typeof AdminDernierLivresCom === 'undefined') {
+            console.error('AdminDernierLivresCom n\'est pas défini');
             return;
         }
         new Vue({
             el: '#recent-books-container',
             components: {
-                'recent-books': RecentBooksComponent
+                'recent-books': AdminDernierLivresCom
             }
         });
     }
     
     if (document.getElementById('recent-authors-container')) {
-        if (typeof RecentAuthorsComponent === 'undefined') {
-            console.error('RecentAuthorsComponent n\'est pas défini');
+        if (typeof AdminDernierAuteursCom === 'undefined') {
+            console.error('AdminDernierAuteursCom n\'est pas défini');
             return;
         }
         new Vue({
             el: '#recent-authors-container',
             components: {
-                'recent-authors': RecentAuthorsComponent
+                'recent-authors': AdminDernierAuteursCom
             }
         });
     }

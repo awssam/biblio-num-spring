@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import uit.fs.bibliotheque.model.RoleConstants;
 import uit.fs.bibliotheque.service.UtilisateurService;
 
 @Configuration
@@ -28,9 +29,17 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/mon-compte", "/changer-mot-de-passe").authenticated()
+                .requestMatchers("/dashboard","/dashboard/**").hasRole(RoleConstants.ADMINISTRATEUR)
                 .requestMatchers("/inscription", "/connexion").anonymous()
-                .requestMatchers("/", "/css/**", "/bootstrap/**", "/js/**", "/images/**", "/uploads/**").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/", 
+                "/css/**", "/bootstrap/**",
+                 "/fonts/**", 
+                 "/js/**", 
+                 "/images/**", 
+                 "/uploads/**",
+                 "/accueil", "/livres", "/livres/**"
+                 ).permitAll()
+                // .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/connexion")

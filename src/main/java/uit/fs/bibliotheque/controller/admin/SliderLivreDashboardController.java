@@ -1,4 +1,4 @@
-package uit.fs.bibliotheque.controller;
+package uit.fs.bibliotheque.controller.admin;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,17 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
-import uit.fs.bibliotheque.model.Livre;
+import uit.fs.bibliotheque.controller.AbstractController;
 import uit.fs.bibliotheque.model.SliderLivre;
 import uit.fs.bibliotheque.service.AccueilService;
 import uit.fs.bibliotheque.service.LivreService;
 
 @Controller
 @RequestMapping("/dashboard/slider-livres")
-@PreAuthorize("hasRole('MEMBRE') or hasRole('ADMINISTRATEUR')")
-/**
- * Contrôleur pour la gestion des sliders de livres dans le tableau de bord.
- */
+@PreAuthorize("hasRole('ADMINISTRATEUR')")
 public class SliderLivreDashboardController extends AbstractController {
 
     private final AccueilService accueilService;

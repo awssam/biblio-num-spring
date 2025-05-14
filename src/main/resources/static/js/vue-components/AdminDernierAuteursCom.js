@@ -1,35 +1,35 @@
 /**
- * Composant Vue.js pour afficher les derniers livres ajoutés
+ * Composant Vue.js pour afficher les derniers auteurs ajoutés
  */
-const RecentBooksComponent = {
+const AdminDernierAuteursCom = {
     template: `
         <div class="card dashboard-card h-100">
             <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0">Derniers livres ajoutés</h5>
-                <a href="/dashboard/livres" class="btn btn-sm btn-primary">Voir tous</a>
+                <h5 class="card-title mb-0">Derniers auteurs ajoutés</h5>
+                <a href="/dashboard/auteurs" class="btn btn-sm btn-success">Voir tous</a>
             </div>
             <div class="card-body">
                 <div v-if="loading" class="text-center py-3">
-                    <div class="spinner-border text-primary" role="status">
+                    <div class="spinner-border text-success" role="status">
                         <span class="visually-hidden">Chargement...</span>
                     </div>
-                    <p class="text-muted mt-2">Chargement des livres...</p>
+                    <p class="text-muted mt-2">Chargement des auteurs...</p>
                 </div>
                 <div v-else-if="error" class="text-center py-3">
                     <i class="fas fa-exclamation-circle text-danger mb-3" style="font-size: 3rem;"></i>
                     <p class="text-danger">{{ error }}</p>
                 </div>
-                <div v-else-if="books.length === 0" class="text-center py-3">
-                    <i class="fas fa-book-open text-muted mb-3" style="font-size: 3rem;"></i>
-                    <p class="text-muted">Aucun livre n'a été ajouté récemment.</p>
+                <div v-else-if="authors.length === 0" class="text-center py-3">
+                    <i class="fas fa-user-edit text-muted mb-3" style="font-size: 3rem;"></i>
+                    <p class="text-muted">Aucun auteur n'a été ajouté récemment.</p>
                 </div>
                 <div v-else>
-                    <a v-for="livre in books" :key="livre.id"  :href="'/dashboard/livres/' + livre.id+'/modifier'" >
-                    <div class="recent-item recent-item-book">
-                        <h6>{{ livre.titre }}</h6>
+                <a  v-for="auteur in authors" :key="auteur.id" :href="'/dashboard/auteurs/' + auteur.id+'/modifier'" class="">
+                    <div class="recent-item recent-item-author">
+                        <h6>{{ auteur.nomComplet }}</h6>
                         <div class="d-flex justify-content-between">
-                            <p>{{ livre.auteur ? livre.auteur.nomComplet : 'Auteur inconnu' }}</p>
-                            <p v-if="livre.dateCreation">{{ formatDate(livre.dateCreation) }}</p>
+                            <p>{{ auteur.nationalite || 'Nationalité non spécifiée' }}</p>
+                            <p v-if="auteur.dateCreation">{{ formatDate(auteur.dateCreation) }}</p>
                         </div>
                     </div>
                         </a>
@@ -40,33 +40,33 @@ const RecentBooksComponent = {
     `,
     data() {
         return {
-            books: [],
+            authors: [],
             loading: true,
             error: null
         };
     },
     mounted() {
-        this.fetchBooks();
+        this.fetchAuthors();
     },
     methods: {
-        fetchBooks() {
+        fetchAuthors() {
             this.loading = true;
             this.error = null;
             
-            fetch('/dashboard/recent-livres')
+            fetch('/dashboard/recent-auteurs')
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Erreur lors du chargement des livres');
+                        throw new Error('Erreur lors du chargement des auteurs');
                     }
                     return response.json();
                 })
                 .then(data => {
-                    this.books = data;
+                    this.authors = data;
                     this.loading = false;
                 })
                 .catch(error => {
                     console.error('Erreur:', error);
-                    this.error = 'Impossible de charger les livres. Veuillez réessayer plus tard.';
+                    this.error = 'Impossible de charger les auteurs. Veuillez réessayer plus tard.';
                     this.loading = false;
                 });
         },

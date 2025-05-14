@@ -1,4 +1,4 @@
-package uit.fs.bibliotheque.controller;
+package uit.fs.bibliotheque.controller.admin;
 
 import java.util.List;
 
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import uit.fs.bibliotheque.controller.AbstractController;
 import uit.fs.bibliotheque.model.Auteur;
 import uit.fs.bibliotheque.model.Livre;
 import uit.fs.bibliotheque.model.SectionAccueil;
@@ -19,7 +20,7 @@ import uit.fs.bibliotheque.service.DashbordService;
 
 @Controller
 @RequestMapping("/dashboard")
-@PreAuthorize("hasRole('MEMBRE') or hasRole('ADMINISTRATEUR')")
+@PreAuthorize("hasRole('ADMINISTRATEUR')")
 /**
  * Contrôleur pour la gestion des auteurs dans le tableau de bord.
  */
