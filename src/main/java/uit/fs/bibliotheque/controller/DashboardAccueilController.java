@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import uit.fs.bibliotheque.model.Auteur;
 import uit.fs.bibliotheque.model.Livre;
+import uit.fs.bibliotheque.model.SectionAccueil;
+import uit.fs.bibliotheque.model.SliderLivre;
+import uit.fs.bibliotheque.service.AccueilService;
 import uit.fs.bibliotheque.service.DashbordService;
 
 @Controller
@@ -23,10 +26,11 @@ import uit.fs.bibliotheque.service.DashbordService;
 public class DashboardAccueilController extends AbstractController {
 
     private final DashbordService dashboardService;
+    private final AccueilService accueilService;
 
-
-    public DashboardAccueilController(DashbordService dashboardService) {
+    public DashboardAccueilController(DashbordService dashboardService, AccueilService accueilService) {
         this.dashboardService = dashboardService;
+        this.accueilService = accueilService;
     }
 
 
@@ -41,6 +45,10 @@ public class DashboardAccueilController extends AbstractController {
         // Récupérer les livres et auteurs récents
         List<Livre> recentBooks = dashboardService.getRecentBooks();
         List<Auteur> recentAuthors = dashboardService.getRecentAuthors();
+        
+        // Récupérer les informations de gestion de la page d'accueil
+        List<SliderLivre> slidersLivres = accueilService.getAllSliderLivres();
+        List<SectionAccueil> sectionsAccueil = accueilService.getAllSectionsAccueil();
 
         // Ajouter les informations au modèle
         model.addAttribute("countOfAllAuthors", countOfAllAuthors);
@@ -49,6 +57,8 @@ public class DashboardAccueilController extends AbstractController {
         model.addAttribute("countOfAllUsers", countOfAllUsers);
         model.addAttribute("recentBooks", recentBooks);
         model.addAttribute("recentAuthors", recentAuthors);
+        model.addAttribute("slidersLivres", slidersLivres);
+        model.addAttribute("sectionsAccueil", sectionsAccueil);
 
         return renderView(model, "dashboard/accueil", "Dashboard Accueil");
     }
