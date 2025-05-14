@@ -1,0 +1,58 @@
+<div th:fragment="book_carousel(livres, title, id, autoplayTimeout)" class="mb-5 owl-carousel-section">
+  <h2 th:if="${title}" class="border-bottom pb-2 mb-4 sectionTitle" th:text="${title}"></h2>
+  
+  <div class="owl-carousel-container position-relative">
+    <div class="owl-carousel owl-theme" th:id="${id ?: 'carousel_' + #dates.formatISO(#dates.createNow())}">
+      <div class="item" th:each="livre : ${livres}" >
+        <div th:replace="~{partials/book_card :: book_card(${livre})}"></div>
+      </div>
+      <div class="item" th:if="${livres == null || #lists.isEmpty(livres)}">
+        <p>Aucun livre disponible pour le moment.</p>
+      </div>
+    </div>
+    
+     <button class="customPrevBtn  "></button>
+    <button class="customNextBtn  "></button>
+  </div>
+  
+  <script th:inline="javascript">
+    $(document).ready(function(){
+      var carouselId = /*[[${id ?: 'carousel_' + #dates.formatISO(#dates.createNow())}]]*/ 'carousel_id';
+      var timeoutDuration = /*[[${autoplayTimeout ?: 5000}]]*/ 5000;
+      var owl = $("#" + carouselId).owlCarousel({
+        loop: true,
+      margin: 10,
+      nav: false,
+      dots: false,
+      autoplay: true,
+      autoplayTimeout: 5000,
+      autoplayHoverPause: true,
+      responsive: {
+        0: {
+          items: 1
+        },
+        576: {
+          items: 2
+        },
+        768: {
+          items: 3
+        },
+        992: {
+          items: 4
+        },
+        1200: {
+          items: 6
+        }
+      },
+      });
+      
+      $("#" + carouselId).closest('.owl-carousel-section').find('.customNextBtn').click(function() {
+        owl.trigger('next.owl.carousel');
+      });
+      
+      $("#" + carouselId).closest('.owl-carousel-section').find('.customPrevBtn').click(function() {
+        owl.trigger('prev.owl.carousel');
+      });
+    });
+  </script>
+</div>

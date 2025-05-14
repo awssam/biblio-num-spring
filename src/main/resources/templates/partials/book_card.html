@@ -1,0 +1,42 @@
+<div th:fragment="book_card(livre)" class="views-row book-card">
+    <article>
+        <div class="deals-slider-item layout layout--onecol">
+            <div class="layout__region layout__region--content">
+                <section class="block block-layout-builder block-field-blocknodeebook-featurefield-ef-cover clearfix">
+                    <div class="block-header"></div>
+                    <div class="block-content">
+                        <div class="field field--name-field-ef-cover field--type-entity-reference field--label-hidden field--item image-wrapper" style="position: relative;">
+                            <a th:href="@{'/livres/' + ${livre.id}}" hreflang="en">
+                                <div th:if="${livre.couverture != null}">
+                                    <img loading="lazy" th:src="${livre.couverture}" width="220" height="330" th:alt="${livre.titre}" typeof="foaf:Image" class="img-responsive">
+                                </div>
+                                <div th:unless="${livre.couverture != null}" style="width: 220px; height: 330px; display: flex; align-items: center; justify-content: center; background-color: #f0f0f0;">
+                                    <i class="fa-solid fa-book fa-3x text-secondary"></i>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+                <section class="block block-layout-builder block-field-blocknodeebook-featuretitle clearfix">
+                    <div class="block-header"></div>
+                    <div class="block-content">
+                        <span class="card-book-title"><a th:href="@{'/livres/' + ${livre.id}}" hreflang="en" th:text="${#strings.abbreviate(livre.titre, 40)}"></a></span>
+                    </div>
+                </section>
+                <section class="block block-layout-builder block-field-blocknodeebook-featurefield-af-name clearfix">
+                    <div class="block-header"></div>
+                    <div class="block-content">
+                        <div class="field field--name-field-af-name field--type-string field--label-hidden field--item">
+                            <th:block th:if="${not #lists.isEmpty(livre.auteurs)}">
+                                <span th:text="${livre.getBeautifulAuteurs()}"></span>
+                                <th:block th:if="${#lists.size(livre.auteurs) > 1}">
+                                    <span th:text="'et ' + (${#lists.size(livre.auteurs)} - 1) + ' autre(s)'"></span>
+                                </th:block>
+                            </th:block>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </article>
+</div>

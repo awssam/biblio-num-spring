@@ -17,7 +17,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Entity
 @Table(name = "auteurs")
@@ -25,7 +24,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = {"livres"})
-@ToString(exclude = {"livres"})
 public class Auteur {
 
     @Id
@@ -72,5 +70,10 @@ public class Auteur {
 
     public Number getNombreLivres() {
         return livres.size();
+    }
+    
+    @Override
+    public String toString() {
+        return getNomComplet();
     }
 }

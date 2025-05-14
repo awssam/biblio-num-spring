@@ -29,7 +29,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/mon-compte", "/changer-mot-de-passe").authenticated()
                 .requestMatchers("/inscription", "/connexion").anonymous()
-                .requestMatchers("/", "/css/**", "/bootstrap/**", "/js/**", "/images/**").permitAll()
+                .requestMatchers("/", "/css/**", "/bootstrap/**", "/js/**", "/images/**", "/uploads/**").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form

@@ -1,0 +1,69 @@
+<div th:fragment="book_slider(livres, id, background_image)" 
+     class="mb-5 pb-5 pt-5 position-relative" 
+     th:style="'background-image: url(' + ${background_image != null ? background_image : '/images/motif-gray.jpeg'} + '); background-size: cover; background-position: center;'">
+     
+    <div class="overlay position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.6);"></div>
+    
+    <div th:id="${id != null ? id : 'bookSlider'}" class="carousel slide position-relative" data-bs-ride="carousel">
+        <div class="carousel-indicators z-index-10">
+            <th:block th:each="livre, status : ${livres}">
+                <button type="button" th:attr="data-bs-target='#' + ${id != null ? id : 'bookSlider'}, data-bs-slide-to=${status.index}" 
+                        th:class="${status.first ? 'active' : ''}" 
+                        th:aria-current="${status.first}" 
+                        th:aria-label="'Slide ' + ${status.count}"></button>
+            </th:block>
+        </div>
+        <div class="carousel-inner">
+            <div class="container">
+                <div th:each="livre, status : ${livres}" th:class="'carousel-item' + (${status.first} ? ' active' : '')">
+                    <div class="slider-content d-flex align-items-center justify-content-center">
+                        <div class="row w-100 h-100 m-0">
+                            <div class="col-md-4 d-flex justify-content-center align-items-center">
+                                <div th:if="${livre.couverture != null}">
+                                    <img th:src="${'/uploads/'+livre.couverture}" th:alt="${livre.titre}" 
+                                        style="height: 450px; max-width: 100%; object-fit: contain; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                                </div>
+                                <div th:unless="${livre.couverture != null}" class="bg-light d-flex align-items-center justify-content-center" 
+                                    style="height: 450px; width: 320px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                                    <i class="fa-solid fa-book fa-5x text-secondary"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-8 d-flex align-items-center">
+                                <div class="book-info p-4 text-gray-200">
+                                    <h3 class="mb-3 text-gray-200 book-title" th:text="${livre.titre}"></h3>
+                                   
+                                    <p th:if="${livre.resume != null}" class="mb-4 text-gray-200" 
+                                       th:text="${#strings.abbreviate(livre.resume, 350)}"></p>
+
+                                    <p class="mb-3 fs-5 text-gray-200">
+                                        <strong class="text-gray-200">Auteur(s) :</strong>
+                                        <th:block th:if="${livre.auteurs != null && !livre.auteurs.empty}">
+                                            <th:block th:each="auteur, iterStat : ${livre.auteurs}">
+                                                <span class="text-gray-200" th:text="${auteur}"></span>
+                                                <span th:if="${!iterStat.last}">, </span>
+                                            </th:block>
+                                        </th:block>
+                                    </p>
+                                    <a th:href="@{'/livres/' + ${livre.id}}" class="btn btn-primary text-gray-200">Voir détails</a>
+                                    <a th:if="${livre.copiesDisponibles > 0 && #authentication != null && #authentication.isAuthenticated()}" 
+                                       th:href="@{'/livres/emprunter/' + ${livre.id}}" 
+                                       class="btn btn-success ms-2 text-gray-200">
+                                        <i class="fa-solid fa-book-reader"></i> Emprunter
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" th:attr="data-bs-target='#' + ${id != null ? id : 'bookSlider'}" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon bg-dark rounded" aria-hidden="true"></span>
+            <span class="visually-hidden">Précédent</span>
+        </button>
+        <button class="carousel-control-next" type="button" th:attr="data-bs-target='#' + ${id != null ? id : 'bookSlider'}" data-bs-slide="next">
+            <span class="carousel-control-next-icon bg-dark rounded" aria-hidden="true"></span>
+            <span class="visually-hidden">Suivant</span>
+        </button>
+    </div>
+</div>
