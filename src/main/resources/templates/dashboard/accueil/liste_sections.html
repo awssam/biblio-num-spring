@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/base}">
+
+<head>
+    <th:block th:fragment="title">
+        <title>Gestion des Sections | Bibliothèque Numérique</title>
+    </th:block>
+</head>
+
+<body>
+    <main layout:fragment="content">
+        <div class="container-fluid py-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Sections</li>
+                </ol>
+            </nav>
+
+            <div class="card border-0 shadow-sm rounded">
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-grid me-2"></i>Gestion des Sections de la Page d'Accueil
+                    </h5>
+                    <a th:href="@{/dashboard/sections-accueil/creer}" class="btn btn-light btn-sm">
+                        <i class="bi bi-plus-circle me-1"></i> Ajouter une section
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info" th:if="${sectionsAccueil == null || sectionsAccueil.isEmpty()}">
+                        <i class="bi bi-info-circle me-2"></i>Aucune section n'a été configurée pour la page d'accueil.
+                    </div>
+
+                    <div class="table-responsive" th:if="${sectionsAccueil != null && !sectionsAccueil.isEmpty()}">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Ordre</th>
+                                    <th scope="col">Titre</th>
+                                    <th scope="col">Catégorie</th>
+                                    <th scope="col">Nb. Livres</th>
+                                    <th scope="col">Livres/page</th>
+                                    <th scope="col">Intervalle (ms)</th>
+                                    <th scope="col">Dispo. uniquement</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="section : ${sectionsAccueil}">
+                                    <td th:text="${section.ordre}">1</td>
+                                    <td th:text="${section.titre}">Nouveautés</td>
+                                    <td th:text="${section.categorie != null ? section.categorie.nom : 'Toutes'}">Romans</td>
+                                    <td th:text="${section.nombreLivres}">6</td>
+                                    <td th:text="${section.livresParPage}">3</td>
+                                    <td th:text="${section.intervalleDefilement}">5000</td>
+                                    <td>
+                                        <i th:if="${section.disponiblesUniquement}" class="bi bi-check-circle text-success"></i>
+                                        <i th:unless="${section.disponiblesUniquement}" class="bi bi-dash text-muted"></i>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a th:href="@{/dashboard/sections-accueil/{id}/modifier(id=${section.id})}" 
+                                               class="btn btn-outline-primary btn-sm" title="Modifier">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a th:href="@{/dashboard/sections-accueil/{id}/supprimer(id=${section.id})}" 
+                                               class="btn btn-outline-danger btn-sm" title="Supprimer">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">Les sections sont affichées dans l'ordre croissant sur la page d'accueil</small>
+                        <a th:href="@{/}" target="_blank" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-eye me-1"></i> Voir la page d'accueil
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

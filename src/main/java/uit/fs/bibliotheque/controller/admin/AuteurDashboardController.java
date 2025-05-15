@@ -1,4 +1,4 @@
-package uit.fs.bibliotheque.controller;
+package uit.fs.bibliotheque.controller.admin;
 
 import java.util.Optional;
 
@@ -19,12 +19,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
+import uit.fs.bibliotheque.controller.AbstractController;
 import uit.fs.bibliotheque.model.Auteur;
 import uit.fs.bibliotheque.service.AuteurService;
 
 @Controller
 @RequestMapping("/dashboard/auteurs")
-@PreAuthorize("hasRole('MEMBRE') or hasRole('ADMINISTRATEUR')")
+@PreAuthorize("hasRole('ADMINISTRATEUR')")
 /**
  * Contrôleur pour la gestion des auteurs dans le tableau de bord.
  */

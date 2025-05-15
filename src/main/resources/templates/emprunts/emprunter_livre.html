@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+
+<head>
+    <title>Emprunter un livre</title>
+</head>
+
+<body>
+    <main layout:fragment="content">
+        <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <img th:if="${livre.couverture}" th:src="${livre.couverture}" class="card-img-top" th:alt="${livre.titre}" />
+                <div th:unless="${livre.couverture}" class="ratio ratio-1x1 bg-light d-flex align-items-center justify-content-center">
+                    <i class="fa-solid fa-book fa-3x text-secondary"></i>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${livre.titre}">Titre du Livre</h5>
+                    <!-- <h6 class="card-subtitle mb-2 text-muted" th:text="'Par ' + ${livre.auteur}">Par Auteur</h6> -->
+                    <p class="card-text" th:text="${#strings.abbreviate(livre.resume, 150)}">Résumé...</p>
+                    <a th:href="@{/livres/detail/{id}(id=${livre.id})}" class="btn btn-outline-primary btn-sm">
+                        <i class="fa-solid fa-info-circle"></i> Détails du livre
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Emprunter ce livre</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" th:object="${empruntForm}" th:action="@{/emprunter/{livreId}(livreId=${livre.id})}">
+                        
+                        <div class="alert alert-info">
+                            <i class="fa-solid fa-info-circle"></i> Vous pouvez emprunter ce livre pour une durée maximale de <strong th:text="${dureeMax} + ' jours'"> jours</strong>.
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="dureeEmprunt" class="form-label">Durée de l'emprunt (jours)</label>
+                            <input type="number" class="form-control" id="dureeEmprunt" name="dureeEmprunt" th:value="${dureeDefaut}" min="1" th:max="${dureeMax}" step="1" />
+                            <div class="form-text">Entrez une valeur entre 1 et <span th:text="${dureeMax}">14</span> jours</div>
+                            <div th:if="${#fields.hasErrors('dureeEmprunt')}" class="alert alert-danger mt-1">
+                                <ul class="mb-0 ps-3">
+                                    <li th:each="err : ${#fields.errors('dureeEmprunt')}" th:text="${err}" />
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fa-solid fa-book"></i> Emprunter
+                            </button>
+                            <a th:href="@{/livres/detail/{id}(id=${livre.id})}" class="btn btn-outline-secondary">
+                                <i class="fa-solid fa-arrow-left"></i> Annuler
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card mt-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Conditions d'emprunt</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Copies disponibles
+                            <span class="badge bg-primary rounded-pill" th:text="${exemplairesRestants}">0</span>
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fa-solid fa-clock me-2"></i> Le livre doit être retourné à la date indiquée.
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fa-solid fa-sync me-2"></i> Vous pouvez renouveler votre emprunt une fois avant la date de retour.
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fa-solid fa-book-reader me-2"></i> Bonne lecture !
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    </main>
+    
+    <script layout:fragment="script" th:inline="javascript">
+    /*<![CDATA[*/
+        // Simple input field - no special JavaScript needed
+    /*]]>*/
+    </script>
+</body>
+</html>

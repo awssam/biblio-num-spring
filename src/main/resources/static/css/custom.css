@@ -1,5 +1,41 @@
-/* Custom styles for Bibliothèque Numérique application */
+/* Global font settings */
+@font-face {
+    font-family: 'CenturyGothicRegular';
+    src: url('/fonts/CenturyGothicRegular.woff2') format('woff2'),
+        url('/fonts/CenturyGothicRegular.woff') format('woff'),
+        url('/fonts/CenturyGothicRegular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 
+@font-face {
+    font-family: 'CenturyGothicBold';
+    src: url('/fonts/CenturyGothicBold.woff2') format('woff2'),
+        url('/fonts/CenturyGothicBold.woff') format('woff'),
+        url('/fonts/CenturyGothicBold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'CenturyGothicRegular', Arial, sans-serif;
+}
+
+
+/* Custom styling for book title in carousel */
+
+.book-info h3.book-title {
+    font-family: 'CenturyGothicBold', Arial, sans-serif;
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: white !important;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+.book-info h3, .book-info p, .book-info strong {
+    color: white !important;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+}
 /* Navbar gradient style */
 .navbar-gradient {
     background-image: -webkit-gradient(linear, left top, right top, from(#FF7854), to(#FF5079));
@@ -8,21 +44,17 @@
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFF7854',endColorstr='#FFFF5079',GradientType=1);
 }
 
-/* Body styles */
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f8f9fa;
-    color: #333;
-}
 
 /* Card styles */
 .card {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.hover-float {
     transition: transform 0.3s ease;
 }
 
-.card:hover {
+.hover-float:hover {
     transform: translateY(-5px);
 }
 
@@ -88,4 +120,54 @@ body {
     margin-right: 10px;
     vertical-align: middle;
     filter: brightness(0) invert(1); /* Makes the logo white to match text */
+}
+
+
+.navbar-brand {
+    font-size: 1.5rem;
+}
+
+.nav-link {
+    font-size: 1.1rem;
+    padding: 10px 15px !important;
+}
+
+.owl-carousel-section h2.sectionTitle {
+    color: #616161;
+    font-weight: bold;
+    font-size: 20px;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+}
+
+
+.owl-carousel-section .customPrevBtn, .owl-carousel-section .customNextBtn {
+    position: absolute;
+    top: 35%;
+    transform: translateY(-50%);
+    z-index: 10;
+    height: 32px;
+    width: 18px;
+    border: none;
+    background-color: transparent;
+    background-size: cover;
+    background-position-x: -9px;
+}
+.owl-carousel-section .customPrevBtn {
+    background-image: url(/images/arrow-left.png);
+}
+
+
+.book-card .image-wrapper::after {
+    display: block;
+    content: '';
+    height: 5px;
+    border-radius: 50%;
+    width: 80%;
+    position: absolute;
+    left: 10%;
+    bottom: 0;
+    z-index: -2;
+    -webkit-box-shadow: 0 0px 10px 4px #817d79;
+    box-shadow: 0 0px 10px 4px #817d79;
 }

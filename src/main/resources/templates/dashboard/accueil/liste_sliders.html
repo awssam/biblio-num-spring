@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/base}">
+
+<head>
+    <th:block th:fragment="title">
+        <title>Gestion des Sliders | Bibliothèque Numérique</title>
+    </th:block>
+</head>
+
+<body>
+    <main layout:fragment="content">
+        <div class="container-fluid py-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Sliders</li>
+                </ol>
+            </nav>
+
+            <div class="card border-0 shadow-sm rounded">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-images me-2"></i>Gestion des Sliders de la Page d'Accueil
+                    </h5>
+                    <a th:href="@{/dashboard/slider-livres/creer}" class="btn btn-light btn-sm">
+                        <i class="bi bi-plus-circle me-1"></i> Ajouter un livre au slider
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info" th:if="${slidersLivres == null || slidersLivres.isEmpty()}">
+                        <i class="bi bi-info-circle me-2"></i>Aucun slider n'a été configuré.
+                    </div>
+
+                    <div class="table-responsive" th:if="${slidersLivres != null && !slidersLivres.isEmpty()}">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Ordre</th>
+                                    <th scope="col">Image</th>
+                                    <th scope="col">Titre du livre</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="slider : ${slidersLivres}">
+                                    <td th:text="${slider.ordre}">1</td>
+                                    <td>
+                                        <img th:if="${slider.livre.couverture != null}" th:src="${slider.livre.couvertureURL}" 
+                                             alt="Couverture" class="img-thumbnail" style="height: 80px;">
+                                        <span th:unless="${slider.livre.couverture != null}" class="text-muted">
+                                            Pas d'image
+                                        </span>
+                                    </td>
+                                    <td th:text="${slider.livre.titre}">Titre du livre</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a th:href="@{/dashboard/slider-livres/{id}/modifier(id=${slider.id})}" 
+                                               class="btn btn-outline-primary btn-sm" title="Modifier">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a th:href="@{/dashboard/slider-livres/{id}/supprimer(id=${slider.id})}" 
+                                               class="btn btn-outline-danger btn-sm" title="Supprimer">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">Les sliders sont affichés dans l'ordre croissant sur la page d'accueil</small>
+                        <a th:href="@{/}" target="_blank" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-eye me-1"></i> Voir la page d'accueil
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

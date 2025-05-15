@@ -97,6 +97,8 @@ mvn spring-boot:run
 Pour plus d'informations, consultez:
 - [Documentation des catégories](docs/categories.md) - Gestion des catégories de livres
 - [Documentation des auteurs](docs/auteurs.md) - Gestion des auteurs de livres
+- [Documentation des fichiers](docs/fichiers.md) - Gestion des fichiers
+- [Documentation des livres](docs/livres.md) - Gestion des livres
 - Documentation des APIs et des URLs dans le fichier de documentation du projet
 
 

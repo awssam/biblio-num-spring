@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+
+<head>
+    <title>Mes Emprunts</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div class="container py-5">
+            <h1 class="mb-4">Mes Emprunts de Livres</h1>
+            
+            <!-- Messages flash -->
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${success}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            
+            <!-- Filtres -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Filtrer mes emprunts</h5>
+                </div>
+                <div class="card-body">
+                    <div class="btn-group mb-3" role="group">
+                        <a href="/mon-compte/mes-emprunts" class="btn btn-outline-primary" 
+                           th:classappend="${statutActif == null ? 'active' : ''}">Tous</a>
+                        <a href="/mon-compte/mes-emprunts?statut=en_cours" class="btn btn-outline-primary" 
+                           th:classappend="${statutActif == 'en_cours' ? 'active' : ''}">En cours</a>
+                        <a href="/mon-compte/mes-emprunts?statut=rendu" class="btn btn-outline-primary" 
+                           th:classappend="${statutActif == 'rendu' ? 'active' : ''}">Rendus</a>
+                        <a href="/mon-compte/mes-emprunts?statut=retard" class="btn btn-outline-primary" 
+                           th:classappend="${statutActif == 'retard' ? 'active' : ''}">En retard</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Liste des emprunts -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Liste des emprunts</h5>
+                </div>
+                <div class="card-body">
+                    <div th:if="${emprunts.isEmpty()}" class="text-center py-4">
+                        <p class="lead mb-3">Vous n'avez pas encore d'emprunts.</p>
+                        <a href="/" class="btn btn-primary">Explorer la bibliothèque</a>
+                    </div>
+                    
+                    <div th:unless="${emprunts.isEmpty()}" class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Livre</th>
+                                    <th>Date d'emprunt</th>
+                                    <th>Retour prévu</th>
+                                    <th>Statut</th>
+                                    <th>Jours restants</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="emprunt : ${emprunts.content}">
+                                    <td>
+                                        <span 
+                                           th:text="${emprunt.livre.titre}"></span>
+                                    </td>
+                                    <td th:text="${#temporals.format(emprunt.dateEmprunt, 'dd/MM/yyyy')}"></td>
+                                    <td th:text="${#temporals.format(emprunt.dateRetourPrevue, 'dd/MM/yyyy')}"></td>
+                                    <td>
+                                        <span th:if="${emprunt.statut.name() == 'EN_COURS'}" class="badge bg-primary">
+                                            En cours
+                                        </span>
+                                        <span th:if="${emprunt.statut.name() == 'RENDU'}" class="badge bg-success">
+                                            Rendu
+                                        </span>
+                                        <span th:if="${emprunt.statut.name() == 'RETARD'}" class="badge bg-danger">
+                                            En retard
+                                        </span>
+                                        <span th:if="${emprunt.statut.name() == 'ANNULE'}" class="badge bg-secondary">
+                                            Annulé
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span th:if="${emprunt.statut.name() == 'RENDU' || emprunt.statut.name() == 'ANNULE'}">-</span>
+                                        <span th:if="${emprunt.statut.name() == 'EN_COURS' || emprunt.statut.name() == 'RETARD'}" 
+                                              th:text="${emprunt.joursRestants} + ' jour(s)'"></span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a th:href="@{/livres/{id}(id=${emprunt.livre.id})}" 
+                                               class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-eye"></i> Voir le livre
+                                            </a>
+                                            
+                                            <form th:if="${emprunt.statut.name() == 'EN_COURS'}" 
+                                                  th:action="@{/mon-compte/mes-emprunts/{id}/retourner(id=${emprunt.id})}" 
+                                                  method="post" class="d-inline">
+                                                <button type="submit" class="btn btn-sm btn-outline-success">
+                                                    <i class="bi bi-box-arrow-in-down"></i> Retourner
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <nav th:if="${emprunts.totalPages > 1}" aria-label="Pagination" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" th:classappend="${emprunts.number == 0 ? 'disabled' : ''}">
+                                <a class="page-link" 
+                                   th:href="@{/mon-compte/mes-emprunts(page=${emprunts.number - 1}, statut=${statutActif})}" 
+                                   aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            
+                            <li class="page-item" th:each="i : ${#numbers.sequence(0, emprunts.totalPages - 1)}"
+                                th:classappend="${emprunts.number == i ? 'active' : ''}">
+                                <a class="page-link" 
+                                   th:href="@{/mon-compte/mes-emprunts(page=${i}, statut=${statutActif})}" 
+                                   th:text="${i + 1}"></a>
+                            </li>
+                            
+                            <li class="page-item" th:classappend="${emprunts.number == emprunts.totalPages - 1 ? 'disabled' : ''}">
+                                <a class="page-link" 
+                                   th:href="@{/mon-compte/mes-emprunts(page=${emprunts.number + 1}, statut=${statutActif})}" 
+                                   aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

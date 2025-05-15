@@ -109,7 +109,7 @@
                                     <tbody>
                                         <tr th:each="categorie : ${categories}">
                                             <td th:text="${categorie.nom}">Nom de la catégorie</td>
-                                            <td >0</td>
+                                            <td th:text="${categorie.getNombreLivres()}">0</td>
                                             <td>
                                                 <div class="btn-group" role="group">
                                                     <a th:href="@{'/dashboard/categories/' + ${categorie.id} + '/modifier'}"
@@ -128,56 +128,8 @@
                             </div>
 
                             <!-- Pagination -->
-                            <div th:if="${page.totalPages > 1}">
-                                <nav aria-label="Page navigation">
-                                    <ul class="pagination justify-content-center">
-                                        <li th:class="${page.first} ? 'page-item disabled' : 'page-item'">
-                                            <a class="page-link"
-                                                th:href="@{/dashboard/categories(page=0, search=${param.search})}"
-                                                aria-label="First">
-                                                <span aria-hidden="true">&laquo;&laquo;</span>
-                                            </a>
-                                        </li>
-                                        <li th:class="${page.first} ? 'page-item disabled' : 'page-item'">
-                                            <a class="page-link"
-                                                th:href="@{/dashboard/categories(page=${page.number - 1}, search=${param.search})}"
-                                                aria-label="Previous">
-                                                <span aria-hidden="true">&laquo;</span>
-                                            </a>
-                                        </li>
+                            <div th:replace="~{fragments/pagination :: pagination(${page}, '/dashboard/categories')}"></div>
 
-                                        <li th:each="i : ${#numbers.sequence(T(java.lang.Math).max(0, page.number - 2), T(java.lang.Math).min(page.totalPages - 1, page.number + 2))}"
-                                            th:class="${page.number == i} ? 'page-item active' : 'page-item'">
-                                            <a class="page-link"
-                                                th:href="@{/dashboard/categories(page=${i}, search=${param.search})}"
-                                                th:text="${i + 1}">1</a>
-                                        </li>
-
-                                        <li th:class="${page.last} ? 'page-item disabled' : 'page-item'">
-                                            <a class="page-link"
-                                                th:href="@{/dashboard/categories(page=${page.number + 1}, search=${param.search})}"
-                                                aria-label="Next">
-                                                <span aria-hidden="true">&raquo;</span>
-                                            </a>
-                                        </li>
-                                        <li th:class="${page.last} ? 'page-item disabled' : 'page-item'">
-                                            <a class="page-link"
-                                                th:href="@{/dashboard/categories(page=${page.totalPages - 1}, search=${param.search})}"
-                                                aria-label="Last">
-                                                <span aria-hidden="true">&raquo;&raquo;</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                                <p class="text-center text-muted small">
-                                    Page <span th:text="${page.number + 1}">1</span> sur <span
-                                        th:text="${page.totalPages}">1</span> •
-                                    Affichage de <span
-                                        th:text="${page.numberOfElements > 0 ? page.size * page.number + 1 : 0}">1</span>-<span
-                                        th:text="${page.numberOfElements > 0 ? page.size * page.number + page.numberOfElements : 0}">10</span>
-                                    sur <span th:text="${page.totalElements}">100</span> catégories
-                                </p>
-                            </div>
                         </div>
                         <div th:if="${#lists.isEmpty(categories)}" class="alert alert-info">
                             <div th:if="${param.search != null}">

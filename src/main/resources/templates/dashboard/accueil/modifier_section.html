@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/base}">
+
+<head>
+    <th:block th:fragment="title">
+        <title>Modifier une Section | Bibliothèque Numérique</title>
+    </th:block>
+</head>
+
+<body>
+    <main layout:fragment="content">
+        <div class="container py-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/dashboard/sections-accueil}">Sections</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Modifier</li>
+                </ol>
+            </nav>
+
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-pencil-square me-2"></i>Modifier la section
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <form th:action="@{/dashboard/sections-accueil/{id}/modifier(id=${sectionAccueil.id})}" method="post" th:object="${sectionAccueil}">
+                                <input type="hidden" th:field="*{id}" />
+                                
+                                <div class="mb-3">
+                                    <label for="titre" class="form-label">Titre de la section</label>
+                                    <input type="text" class="form-control" id="titre" th:field="*{titre}" required />
+                                    <div class="form-text text-danger" th:if="${#fields.hasErrors('titre')}" th:errors="*{titre}"></div>
+                                    <div class="form-text">Ce titre sera affiché comme en-tête de la section sur la page d'accueil</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="categorie" class="form-label">Catégorie (optionnelle)</label>
+                                    <select class="form-select" id="categorie" th:field="*{categorie}">
+                                        <option value="">Toutes les catégories</option>
+                                        <option th:each="categorie : ${categories}" 
+                                                th:value="${categorie.id}" 
+                                                th:text="${categorie.nom}"
+                                                th:selected="${sectionAccueil.categorie != null && sectionAccueil.categorie.id == categorie.id}">
+                                            Nom de la catégorie
+                                        </option>
+                                    </select>
+                                    <div class="form-text text-danger" th:if="${#fields.hasErrors('categorie')}" th:errors="*{categorie}"></div>
+                                    <div class="form-text">Si vous sélectionnez une catégorie, seuls les livres de cette catégorie seront affichés</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="ordre" class="form-label">Ordre d'affichage</label>
+                                    <input type="number" class="form-control" id="ordre" th:field="*{ordre}" min="1" required />
+                                    <div class="form-text text-danger" th:if="${#fields.hasErrors('ordre')}" th:errors="*{ordre}"></div>
+                                    <div class="form-text">Ordre d'affichage de la section sur la page d'accueil (1 = premier, 2 = second, etc.)</div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="nombreLivres" class="form-label">Nombre de livres à afficher</label>
+                                        <input type="number" class="form-control" id="nombreLivres" th:field="*{nombreLivres}" min="1" max="20" required />
+                                        <div class="form-text text-danger" th:if="${#fields.hasErrors('nombreLivres')}" th:errors="*{nombreLivres}"></div>
+                                        <div class="form-text">Nombre total de livres à afficher dans cette section</div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="livresParPage" class="form-label">Livres par page</label>
+                                        <input type="number" class="form-control" id="livresParPage" th:field="*{livresParPage}" min="1" max="10" required />
+                                        <div class="form-text text-danger" th:if="${#fields.hasErrors('livresParPage')}" th:errors="*{livresParPage}"></div>
+                                        <div class="form-text">Nombre de livres visibles à la fois (pagination)</div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="intervalleDefilement" class="form-label">Intervalle de défilement (ms)</label>
+                                    <input type="number" class="form-control" id="intervalleDefilement" th:field="*{intervalleDefilement}" min="1000" step="500" required />
+                                    <div class="form-text text-danger" th:if="${#fields.hasErrors('intervalleDefilement')}" th:errors="*{intervalleDefilement}"></div>
+                                    <div class="form-text">Intervalle en millisecondes entre chaque défilement automatique (5000 = 5 secondes)</div>
+                                </div>
+
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="disponiblesUniquement" th:field="*{disponiblesUniquement}" />
+                                    <label class="form-check-label" for="disponiblesUniquement">Afficher uniquement les livres disponibles</label>
+                                    <div class="form-text">Si coché, seuls les livres ayant au moins une copie disponible seront affichés</div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between">
+                                    <a th:href="@{/dashboard/sections-accueil}" class="btn btn-outline-secondary">
+                                        <i class="bi bi-arrow-left me-1"></i> Retour
+                                    </a>
+                                    <button type="submit" class="btn btn-warning">
+                                        <i class="bi bi-save me-1"></i> Enregistrer les modifications
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

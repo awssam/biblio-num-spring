@@ -7,8 +7,15 @@
     <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap-icons.css}">
 
+  <link rel="stylesheet" th:href="@{/css/owl-carousel/owl.carousel.min.css}">
+  <link rel="stylesheet" th:href="@{/css/owl-carousel/owl.theme.default.min.css}">
+  
+  
     <script th:src="@{/js/jquery.min.js}" ></script>
-
+    <script th:src="@{/js/vue.global.prod.js}" ></script>
+  
+  <!-- Owl Carousel JS -->
+  <script th:src="@{/js/owl-carousel/owl.carousel.min.js}"></script>
     
     <link rel="stylesheet" th:href="@{/css/custom.css}">
 </head>
@@ -16,9 +23,11 @@
     <header>
         <div th:replace="~{layouts/navbar :: navbar}"></div>
     </header>
+    
 
-    <main class="container my-4">
-        <!-- endroit pour les alerts (notifs) -->
+        <div layout:fragment="slider">
+        </div>
+    <div class="container my-4">
         <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
             <span th:text="${successMessage}"></span>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -37,7 +46,7 @@
         <main layout:fragment="content">ba3boola
         </main>
 
-    </main>
+    </div>
 
     <div th:replace="~{layouts/footer :: footer}"></div>
 

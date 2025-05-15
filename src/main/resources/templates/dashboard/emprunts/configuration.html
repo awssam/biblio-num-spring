@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/base}">
+
+<head>
+    <th:block th:fragment="title">
+        <title>Configuration des Emprunts - Biblio UIT</title>
+    </th:block>
+</head>
+
+<body>
+    <main layout:fragment="content">
+        <div class="container mt-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm border-0 rounded-3">
+                        <div class="card-header bg-gradient bg-primary text-white border-0 rounded-top-3">
+                            <h4 class="mb-0"><i class="bi bi-gear-fill me-2"></i>Configuration des Emprunts</h4>
+                        </div>
+                        <div class="card-body p-4">
+                            <form method="post" th:action="@{/dashboard/emprunts/configuration}" th:object="${config}">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                <input type="hidden" th:field="*{id}" />
+
+                                <div class="mb-3">
+                                    <label for="dureeEmpruntDefaut" class="form-label">Durée d'emprunt par défaut (jours)</label>
+                                    <input type="number" class="form-control" id="dureeEmpruntDefaut" th:field="*{dureeEmpruntDefaut}" required>
+                                    <div class="form-text">Nombre de jours par défaut pour un emprunt.</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="maxEmpruntsUtilisateur" class="form-label">Nombre maximum d'emprunts par utilisateur</label>
+                                    <input type="number" class="form-control" id="maxEmpruntsUtilisateur" th:field="*{maxEmpruntsUtilisateur}" required>
+                                    <div class="form-text">Nombre total de livres qu'un utilisateur peut emprunter simultanément.</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="dureeMaxEmprunts" class="form-label">Durée maximale d'emprunt (multiplicateur de la durée par défaut)</label>
+                                    <input type="number" class="form-control" id="dureeMaxEmprunts" th:field="*{dureeMaxEmprunts}" required>
+                                    <div class="form-text">Par combien de fois la durée par défaut peut être étendue au maximum. (Ex: 2 pour doubler la durée initiale).</div>
+                                </div>
+
+                                <div class="d-grid gap-2 mt-4">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="bi bi-save me-2"></i>Enregistrer la Configuration
+                                    </button>
+                                    <a th:href="@{/dashboard}" class="btn btn-outline-secondary">
+                                        <i class="bi bi-arrow-left-circle me-2"></i>Retour au Tableau de Bord
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/base}">
+
+<head>
+    <th:block th:fragment="title">
+        <title th:text="${'Détails du livre - ' + livre.titre}">Détails du livre</title>
+    </th:block>
+</head>
+
+<body>
+    <main layout:fragment="content">
+        <div class="row">
+            <div class="col-md-4">
+                <div th:if="${livre.couverture != null and !livre.couverture.isEmpty()}">
+                    <img th:src="${'/uploads/'+livre.couvertureURL}" class="img-fluid rounded" alt="Couverture du livre"/>
+                </div>
+                <div th:unless="${livre.couverture != null and !livre.couverture.isEmpty()}" class="text-center p-5 bg-light rounded">
+                    <i class="fa-solid fa-book text-muted" style="font-size: 8rem;"></i>
+                    <p class="mt-3 text-muted">Aucune couverture disponible</p>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <h1 th:text="${livre.titre}">Titre du livre</h1>
+                
+                <p>
+                    <strong>Auteur(s) :</strong> 
+                    <span th:if="${!livre.auteurs.isEmpty()}" th:remove="tag">
+                        <th:block th:each="auteur, iterStat : ${livre.auteurs}">
+                            <span th:text="${auteur.nomComplet}">Nom de l'auteur</span>
+                            <span th:if="${!iterStat.last}">, </span>
+                        </th:block>
+                    </span>
+                    <span th:unless="${!livre.auteurs.isEmpty()}" th:text="${'Auteur inconnu'}">Auteur inconnu</span>
+                </p>
+                
+                <p><strong>Résumé :</strong> <span th:text="${livre.resume}">Résumé du livre</span></p>
+                
+                <p>
+                    <strong>Catégorie(s) :</strong> 
+                    <span th:if="${!livre.categories.isEmpty()}" th:text="${livre.beautifulCategories}">Catégories</span>
+                    <span th:unless="${!livre.categories.isEmpty()}">Catégorie non disponible</span>
+                </p>
+                
+                <!-- Composant Vue pour la disponibilité des livres -->
+                <div id="disponibilite_livres"></div>
+                
+                <div class="mt-3">
+                    <th:block sec:authorize="${#authentication != null && #authentication.authenticated}">
+                        <a th:href="@{/mon-compte/mes-emprunts}" class="btn btn-outline-primary btn-sm ml-2">
+                            <i class="fa-solid fa-list"></i> Mes emprunts
+                        </a>
+                    </th:block>
+                </div>
+                
+                <th:block sec:authorize="hasRole('ADMINISTRATEUR')">
+                    <div class="mt-4 border-top pt-3">
+                        <h5>Options d'administration</h5>
+                        <div class="btn-group">
+                            <a th:href="@{/dashboard/livres/{id}/modifier(id=${livre.id})}" class="btn btn-warning">
+                                <i class="fa-solid fa-edit"></i> Modifier
+                            </a>
+                            <a th:href="@{/dashboard/livres/{id}/supprimer(id=${livre.id})}" class="btn btn-danger">
+                                <i class="fa-solid fa-trash"></i> Supprimer
+                            </a>
+                            <a th:href="@{/dashboard/emprunts}" class="btn btn-info">
+                                <i class="fa-solid fa-book-reader"></i> Gérer les emprunts
+                            </a>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+        <div class="mt-4" id="suggestions"></div>
+        <!-- <h3>Livres similaires</h3> -->
+
+        <script type="module">
+            const { createApp } = Vue
+            import DisponibiliteLivres from '/js/vue-web/disponibilite_livres.js'
+            import SuggestionsLivres from '/js/vue-web/suggestions_livres.js'
+            
+            createApp({
+                components: {
+                    'disponibilite-livres': DisponibiliteLivres
+                },
+                template: `
+                    <disponibilite-livres :livre-id="[[${livre.id}]]"></disponibilite-livres>
+                `
+            }).mount('#disponibilite_livres')
+            
+            createApp({
+                components: {
+                    'suggestions-livres': SuggestionsLivres
+                },
+                template: `
+                    <suggestions-livres :livre-id="[[${livre.id}]]" :nombre-suggestions="4" :categorie-prioritaire="true"></suggestions-livres>
+                `
+            }).mount('#suggestions')
+        </script>
+    </main>
+</body>
+</html>

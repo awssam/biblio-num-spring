@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/base}">
+
+<head>
+    <th:block th:fragment="title">
+        <title>Supprimer une Section | Bibliothèque Numérique</title>
+    </th:block>
+</head>
+
+<body>
+    <main layout:fragment="content">
+        <div class="container py-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/dashboard/sections-accueil}">Sections</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Supprimer</li>
+                </ol>
+            </nav>
+
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-trash me-2"></i>Supprimer la section
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-warning">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                Êtes-vous sûr de vouloir supprimer cette section ? Cette action est irréversible.
+                            </div>
+                            
+                            <div class="card mb-4">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0">Détails de la section</h6>
+                                </div>
+                                <div class="card-body">
+                                    <dl class="row">
+                                        <dt class="col-sm-4">Titre</dt>
+                                        <dd class="col-sm-8" th:text="${sectionAccueil.titre}">Titre de la section</dd>
+                                        
+                                        <dt class="col-sm-4">Catégorie</dt>
+                                        <dd class="col-sm-8" th:text="${sectionAccueil.categorie != null ? sectionAccueil.categorie.nom : 'Toutes les catégories'}">Nom de la catégorie</dd>
+                                        
+                                        <dt class="col-sm-4">Ordre d'affichage</dt>
+                                        <dd class="col-sm-8" th:text="${sectionAccueil.ordre}">1</dd>
+                                        
+                                        <dt class="col-sm-4">Nombre de livres</dt>
+                                        <dd class="col-sm-8" th:text="${sectionAccueil.nombreLivres}">6</dd>
+                                        
+                                        <dt class="col-sm-4">Livres par page</dt>
+                                        <dd class="col-sm-8" th:text="${sectionAccueil.livresParPage}">3</dd>
+                                        
+                                        <dt class="col-sm-4">Intervalle de défilement</dt>
+                                        <dd class="col-sm-8" th:text="${sectionAccueil.intervalleDefilement + ' ms'}">5000 ms</dd>
+                                        
+                                        <dt class="col-sm-4">Livres disponibles uniquement</dt>
+                                        <dd class="col-sm-8" th:text="${sectionAccueil.disponiblesUniquement ? 'Oui' : 'Non'}">Oui</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                            
+                            <form th:action="@{/dashboard/sections-accueil/{id}/supprimer(id=${sectionAccueil.id})}" method="post">
+                                <div class="d-flex justify-content-between">
+                                    <a th:href="@{/dashboard/sections-accueil}" class="btn btn-outline-secondary">
+                                        <i class="bi bi-arrow-left me-1"></i> Annuler
+                                    </a>
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="bi bi-trash me-1"></i> Confirmer la suppression
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

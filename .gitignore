@@ -60,5 +60,7 @@ logs/
 ### OS ###
 .DS_Store
 Thumbs.db
+.gitignored/
 .github/
 steps.txt
+uploads/

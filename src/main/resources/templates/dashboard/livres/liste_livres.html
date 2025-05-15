@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/base}">
+
+<head>
+    <!-- Bloc pour le titre -->
+    <th:block th:fragment="title">
+        <title>Gestion des livres Biblio UIT</title>
+    </th:block>
+</head>
+
+<body>
+    <main layout:fragment="content">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Gestion des livres</h1>
+            <div>
+
+                <a th:href="@{/dashboard}" class="btn btn-secondary me-2">
+                    <i class="bi bi-speedometer2"></i> Tableau de bord
+                </a>
+                <a th:href="@{/dashboard/livres/creer}" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Ajouter un livre
+                </a>
+                <a th:href="@{/dashboard/auteurs}" class="btn btn-secondary ms-2">
+                    <i class="bi bi-person-lines-fill"></i> Gérer les auteurs
+                </a>
+                <a th:href="@{/dashboard/categories}" class="btn btn-info ms-2">
+                    <i class="bi bi-list"></i> Gérer les catégories
+                </a>
+            </div>
+        </div>
+
+        <div th:if="${!#lists.isEmpty(messages)}" class="alert alert-success alert-dismissible fade show">
+            <span th:each="msg : ${messages}" th:text="${msg}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div class="row mb-4">
+            <!-- Sidebar with filters -->
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Filtres</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="GET" th:action="@{/dashboard/livres}" id="filterForm">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Recherche</label>
+                                <div class="input-group">
+                                    <input type="text" name="search" class="form-control"
+                                        placeholder="Litre du livre..."
+                                        th:value="${param.search != null ? param.search[0] : ''}">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <a th:href="@{/dashboard/livres}" class="btn btn-outline-secondary btn-sm w-100">
+                                    <i class="bi bi-x-circle"></i> Réinitialiser les filtres
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Active filters display -->
+                <div th:if="${param.search != null and param.search[0] != ''}" class="card mt-3">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0">Filtres actifs</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap gap-2">
+                            <div th:if="${param.search != null and param.search[0] != ''}" class="badge bg-info">
+                                <span th:text="'&quot;' + ${param.search[0]} + '&quot;'"></span>
+                                <a th:href="@{/dashboard/livres}" class="text-white ms-1">
+                                    <i class="bi bi-x-circle"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main content area -->
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Liste des livres</h5>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${!#lists.isEmpty(livres)}">
+                            <p class="mb-3">
+                                <strong th:text="${page.totalElements}">0</strong> livre(s) trouvée(s)
+                                <span th:if="${param.search != null and param.search[0] != ''}">pour la recherche
+                                    <strong th:text="'&quot;' + ${param.search[0]} + '&quot;'"></strong></span>
+                            </p>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Couverture</th>
+                                            <th>Titre</th>
+                                            <th>Auteur(s)</th>
+                                            <th>Catégorie(s)</th>
+                                            <th>Copies disponibles</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="livre : ${livres}">
+                                            <td>
+                                                <img th:if="${livre.couverture != null}"
+                                                    th:src="@{${'/uploads/'+livre.couverture}}"
+                                                    alt="Couverture actuelle" class="img-thumbnail"
+                                                    style="max-width: 50px;" />
+                                                <div th:unless="${livre.couverture != null}" class="text-center"
+                                                    style="max-width: 50px;">
+                                                    <i class="bi bi-book text-muted" style="font-size: 2rem;"></i>
+                                                </div>
+
+                                            </td>
+                                            <td th:text="${livre.titre}">titre du livre</td>
+                                            <td>
+                                                <span th:text="${livre.getBeautifulAuteurs()}">Auteurs</span>
+                                            </td>
+
+                                            <td>
+                                                <span th:text="${livre.getBeautifulCategories()}">Categories</span>
+
+                                            </td>
+                                            <td th:text="${livre.copiesDisponibles}">0</td>
+
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a th:href="@{'/dashboard/livres/' + ${livre.id} + '/modifier'}"
+                                                        class="btn btn-sm btn-info" title="Voir">
+                                                        <i class="bi bi-eye"></i>
+                                                    </a>
+                                                    <a th:href="@{'/dashboard/livres/' + ${livre.id} + '/modifier'}"
+                                                        class="btn btn-sm btn-warning" title="Modifier">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </a>
+                                                    <a th:href="@{'/dashboard/livres/' + ${livre.id} + '/supprimer'}"
+                                                        class="btn btn-sm btn-danger" title="Supprimer">
+                                                        <i class="bi bi-trash"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Pagination -->
+                            <div th:replace="~{fragments/pagination :: pagination(${page}, '/dashboard/livres')}"></div>
+                        </div>
+                        <div th:if="${#lists.isEmpty(livres)}" class="alert alert-info">
+                            <div th:if="${param.search != null}">
+                                Aucun livre ne correspond à votre recherche <span
+                                    th:text="'&quot;' + ${param.search[0]} + '&quot;'"></span>.
+                                <a th:href="@{/dashboard/livres}">Voir toutes les livres</a>.
+                            </div>
+                            <div th:unless="${param.search != null}">
+                                Aucun livre n'est actuellement enregistrée dans la base de données.
+                                <a th:href="@{/dashboard/livres/creer}">Ajouter un livre</a>.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <th:block layout:fragment="scripts">
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    // Auto-submit du formulaire quand une option change
+                    document.querySelectorAll('.filter-auto-submit').forEach(function (input) {
+                        input.addEventListener('change', function () {
+                            document.getElementById('filterForm').submit();
+                        });
+                    });
+                });
+            </script>
+        </th:block>
+
+    </main>
+</body>
