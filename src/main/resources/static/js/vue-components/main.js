@@ -8,17 +8,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     if (document.getElementById('recent-books-container')) {
-
         if (typeof AdminDernierLivresCom === 'undefined') {
             console.error('AdminDernierLivresCom n\'est pas défini');
             return;
         }
-        new Vue({
-            el: '#recent-books-container',
+        const booksApp = Vue.createApp({
             components: {
                 'recent-books': AdminDernierLivresCom
             }
         });
+        booksApp.mount('#recent-books-container');
     }
     
     if (document.getElementById('recent-authors-container')) {
@@ -26,11 +25,11 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('AdminDernierAuteursCom n\'est pas défini');
             return;
         }
-        new Vue({
-            el: '#recent-authors-container',
+        const authorsApp = Vue.createApp({
             components: {
                 'recent-authors': AdminDernierAuteursCom
             }
         });
+        authorsApp.mount('#recent-authors-container');
     }
 });

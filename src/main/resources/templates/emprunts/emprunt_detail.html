@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+
+<head>
+    <title>Détails de l'emprunt</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <nav aria-label="breadcrumb" class="mb-4">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a th:href="@{/emprunts/mes-emprunts}">Mes emprunts</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Détails de l'emprunt</li>
+                        </ol>
+                    </nav>
+                    
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <h1 class="h4 mb-0">Détails de l'emprunt</h1>
+                        </div>
+                        
+                        <div class="card-body">
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <img th:if="${emprunt.livre.couverture}" th:src="${emprunt.livre.couverture}" 
+                                         class="img-fluid rounded" th:alt="${emprunt.livre.titre}">
+                                    <img th:unless="${emprunt.livre.couverture}" src="/images/book-cover-placeholder.jpg" 
+                                         class="img-fluid rounded" alt="Couverture non disponible">
+                                </div>
+                                
+                                <div class="col-md-8">
+                                    <h2 class="h4" th:text="${emprunt.livre.titre}"></h2>
+                                    <p th:if="${emprunt.livre.auteurs}" class="text-muted">
+                                        <span th:text="${emprunt.livre.getBeautifulAuteurs()}"></span>
+                                    </p>
+                                    
+                                    <div class="mt-4">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span class="fw-bold">Statut :</span>
+                                            <span>
+                                                <span th:if="${emprunt.statut.name() == 'EN_COURS'}" class="badge bg-primary">
+                                                    En cours
+                                                </span>
+                                                <span th:if="${emprunt.statut.name() == 'RENDU'}" class="badge bg-success">
+                                                    Rendu
+                                                </span>
+                                                <span th:if="${emprunt.statut.name() == 'RETARD'}" class="badge bg-danger">
+                                                    En retard
+                                                </span>
+                                                <span th:if="${emprunt.statut.name() == 'ANNULE'}" class="badge bg-secondary">
+                                                    Annulé
+                                                </span>
+                                            </span>
+                                        </div>
+                                        
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span class="fw-bold">Date d'emprunt :</span>
+                                            <span th:text="${#temporals.format(emprunt.dateEmprunt, 'dd/MM/yyyy HH:mm')}"></span>
+                                        </div>
+                                        
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span class="fw-bold">Durée d'emprunt :</span>
+                                            <span th:text="${emprunt.dureeEmprunt} + ' jours'"></span>
+                                        </div>
+                                        
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span class="fw-bold">Date de retour prévue :</span>
+                                            <span th:text="${#temporals.format(emprunt.dateRetourPrevue, 'dd/MM/yyyy HH:mm')}"></span>
+                                        </div>
+                                        
+                                        <div th:if="${emprunt.dateRetourEffective}" class="d-flex justify-content-between mb-2">
+                                            <span class="fw-bold">Date de retour effective :</span>
+                                            <span th:text="${#temporals.format(emprunt.dateRetourEffective, 'dd/MM/yyyy HH:mm')}"></span>
+                                        </div>
+                                        
+                                        <div th:if="${emprunt.statut.name() == 'EN_COURS' || emprunt.statut.name() == 'RETARD'}" 
+                                             class="d-flex justify-content-between mb-2">
+                                            <span class="fw-bold">Jours restants :</span>
+                                            <span th:text="${emprunt.getJoursRestants()} + ' jour(s)'"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-end gap-2 mt-4">
+                                <a th:href="@{/livres/{id}(id=${emprunt.livre.id})}" class="btn btn-outline-primary">
+                                    <i class="bi bi-book me-2"></i>Voir le livre
+                                </a>
+                                
+                                <form th:if="${emprunt.statut.name() == 'EN_COURS'}" 
+                                      th:action="@{/emprunts/retourner/{id}(id=${emprunt.id})}" 
+                                      method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="bi bi-box-arrow-in-down me-2"></i>Retourner
+                                    </button>
+                                </form>
+                                
+                                <form th:if="${emprunt.statut.name() == 'EN_COURS'}" 
+                                      th:action="@{/emprunts/renouveler/{id}(id=${emprunt.id})}" 
+                                      method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-info text-white">
+                                        <i class="bi bi-arrow-repeat me-2"></i>Renouveler
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import uit.fs.bibliotheque.controller.AbstractController;
 import uit.fs.bibliotheque.model.Livre;
+import uit.fs.bibliotheque.repository.EmpruntLivreRepository;
+import uit.fs.bibliotheque.service.EmpruntService;
 import uit.fs.bibliotheque.service.LivreService;
+import uit.fs.bibliotheque.model.ConfigurationEmprunt;
+import uit.fs.bibliotheque.model.EmpruntLivre.StatutEmprunt;
+import uit.fs.bibliotheque.model.Utilisateur;
 
 /**
  *
@@ -26,9 +32,14 @@ import uit.fs.bibliotheque.service.LivreService;
 @RequestMapping("/livres")
 public class LivreController extends AbstractController {
     private final LivreService livreService;
+    private final EmpruntService empruntService;
+    @Autowired
+    private EmpruntLivreRepository empruntRepository;
 
-    public LivreController( LivreService livreService) {
+    
+    public LivreController( LivreService livreService, EmpruntService empruntService) {
         this.livreService = livreService;
+        this.empruntService = empruntService;
     }
 
 
@@ -46,15 +57,30 @@ public class LivreController extends AbstractController {
         model.addAttribute("livre", livre);
         
         boolean userAuthenticated = isUserLoggedIn();
-        
-        Integer exemplairesRestants = livre.getCopiesDisponibles();
+        Utilisateur utilisateur = getCurrentUser();
+                boolean livreActuelmentEmprunteParUtilisateur = empruntService.livreActuelmentEmprunteParUtilisateur(livre, utilisateur);
+
+        long empruntsActifs = empruntRepository.countByLivreAndStatut(livre, StatutEmprunt.EN_COURS);
+        int exemplairesRestants = livre.getCopiesDisponibles() - (int) empruntsActifs;
         
         boolean limiteAtteinte = false;
         String messageLimite = "";
+
+        // ConfigurationEmprunt config = empruntService.getConfiguration();
+        if (userAuthenticated) {
+            if (empruntsActifs >= exemplairesRestants) {
+                limiteAtteinte = true;
+                messageLimite = "Vous avez atteint votre limite d'emprunts simultanés.";
+            }
+        }
         
-        if (userAuthenticated && exemplairesRestants <= 0) {
+        if (empruntsActifs >= exemplairesRestants) {
             limiteAtteinte = true;
             messageLimite = "Aucun exemplaire disponible actuellement";
+        }
+        if(livreActuelmentEmprunteParUtilisateur){
+            limiteAtteinte = true;
+            messageLimite = "Vous avez déjà emprunté ce livre.";
         }
         
         String datePublication = livre.getDatePublication() != null 

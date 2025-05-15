@@ -46,7 +46,7 @@
                                     </p>
                                     <a th:href="@{'/livres/' + ${livre.id}}" class="btn btn-primary text-gray-200">Voir détails</a>
                                     <a th:if="${livre.copiesDisponibles > 0 && #authentication != null && #authentication.isAuthenticated()}" 
-                                       th:href="@{'/livres/emprunter/' + ${livre.id}}" 
+                                       th:href="@{'/emprunter/' + ${livre.id}}" 
                                        class="btn btn-success ms-2 text-gray-200">
                                         <i class="fa-solid fa-book-reader"></i> Emprunter
                                     </a>

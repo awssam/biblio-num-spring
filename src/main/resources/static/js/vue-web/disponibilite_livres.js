@@ -84,7 +84,7 @@ export default {
         </div>
 
         <div v-if="exemplairesRestants > 0 && userAuthenticated && !limiteAtteinte" class="mt-3">
-          <a :href="'/emprunter/' + livreId + '/'" class="btn btn-success">
+          <a :href="'/emprunter/' + livreId" class="btn btn-success">
             <i class="fa-solid fa-book-reader"></i> Emprunter ce livre
           </a>
         </div>
