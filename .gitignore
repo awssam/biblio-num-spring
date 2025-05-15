@@ -29,6 +29,9 @@ build/
 !**/src/test/**/build/
 
 ### VS Code ###
+
+### Environment Variables ###
+.env
 .vscode/
 secretsource/
 

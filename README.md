@@ -77,6 +77,7 @@ Actuellement, le projet ne contient que le modèle suivant :
 ### Prérequis
 - JDK 17
 - Maven 3.6+
+- PostgreSQL database
 
 ### Installation
 1. Clonez le dépôt :
@@ -85,13 +86,15 @@ git clone https://github.com/awssam/biblio-num-spring.git
 cd biblio-num-spring
 ```
 
-2. Compilez et lancez l'application :
+2. Configurez vos variables d'environnement dans un fichier `.env` (voir [ENV_SETUP.md](ENV_SETUP.md) pour plus de détails)
+
+3. Compilez et lancez l'application :
 ```bash
 mvn clean install
 mvn spring-boot:run
 ```
 
-3. Accédez à l'application via : `http://localhost:8080`
+4. Accédez à l'application via : `http://localhost:8080`
 
 ## Documentation
 Pour plus d'informations, consultez:

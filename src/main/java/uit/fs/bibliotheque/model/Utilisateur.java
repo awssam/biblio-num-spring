@@ -33,6 +33,7 @@ public class Utilisateur implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -41,29 +42,39 @@ public class Utilisateur implements UserDetails {
 
     @Column(name = "last_name")
     private String lastName;
+    
 
     @Column(nullable = false)
     private String role;
 
     @CreationTimestamp
-    @Column(name = "date_creation", nullable = false, updatable = false)
+    @Column(name = "date_joined", nullable = false, updatable = false)
     private LocalDateTime dateCreation;
 
+
+    // for django
     @UpdateTimestamp
     @Column(name = "date_modification")
     private LocalDateTime dateModification;
 
-    @Column(nullable = false)
-    private boolean active = true;
+    @Column(name = "is_superuser")
+    @Builder.Default
+    private boolean isSuperuser = false;
 
-    @Column(name = "account_non_expired", nullable = false)
+    @Column(name = "is_staff")
+    @Builder.Default
+    private boolean isStaff = false;
+
+    @Column(name = "is_active")
+    @Builder.Default
+    private boolean isActive = true;
+
+    @Column(name = "account_non_expired" , nullable = true)
+    @Builder.Default
     private boolean accountNonExpired = true;
 
-    @Column(name = "account_non_locked", nullable = false)
-    private boolean accountNonLocked = true;
-
-    @Column(name = "credentials_non_expired", nullable = false)
-    private boolean credentialsNonExpired = true;
+    @Column(name = "last_login")
+    private LocalDateTime lastLogin;
 
 
     // Méthodes de UserDetails
@@ -73,23 +84,8 @@ public class Utilisateur implements UserDetails {
     }
 
     @Override
-    public boolean isAccountNonExpired() {
-        return accountNonExpired;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
-    }
-
-    @Override
     public boolean isEnabled() {
-        return active;
+        return isActive;
     }
 
     // Méthodes utilitaires
