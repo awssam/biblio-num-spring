@@ -30,6 +30,7 @@ public abstract class AbstractController {
         Utilisateur currentUser = getCurrentUser();
         if (currentUser != null) {
             model.addAttribute("currentUser", currentUser);
+            model.addAttribute("isAdmin", currentUser.isAdmin());
         }
         
         return viewName;

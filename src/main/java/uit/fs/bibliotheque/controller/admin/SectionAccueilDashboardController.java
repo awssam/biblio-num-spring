@@ -22,7 +22,7 @@ import uit.fs.bibliotheque.service.CategorieService;
 
 @Controller
 @RequestMapping("/dashboard/sections-accueil")
-@PreAuthorize("hasRole('ADMINISTRATEUR')")
+@PreAuthorize("hasAuthority('IS_ADMIN')")
 /**
  * Contrôleur pour la gestion des sections d'accueil dans le tableau de bord.
  */

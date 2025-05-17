@@ -20,7 +20,7 @@ import uit.fs.bibliotheque.service.DashbordService;
 
 @Controller
 @RequestMapping("/dashboard")
-@PreAuthorize("hasRole('ADMINISTRATEUR')")
+@PreAuthorize("hasAuthority('IS_ADMIN')")
 /**
  * Contrôleur pour la gestion des auteurs dans le tableau de bord.
  */

@@ -25,7 +25,7 @@ import uit.fs.bibliotheque.service.CategorieService;
 
 @Controller
 @RequestMapping("/dashboard/categories")
-@PreAuthorize("hasRole('ADMINISTRATEUR')")
+@PreAuthorize("hasAuthority('IS_ADMIN')")
 /**
  * Contrôleur pour la gestion des catégories
  */

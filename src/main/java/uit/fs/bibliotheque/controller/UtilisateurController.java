@@ -16,7 +16,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import uit.fs.bibliotheque.model.RoleConstants;
 import uit.fs.bibliotheque.model.Utilisateur;
 import uit.fs.bibliotheque.service.UtilisateurService;
 
@@ -40,9 +39,7 @@ public class UtilisateurController extends AbstractController {
             return "redirect:/";
         }
         
-        model.addAttribute("utilisateur", Utilisateur.builder()
-                .role(RoleConstants.MEMBRE) 
-                .build());
+        model.addAttribute("utilisateur", Utilisateur.builder().build());
         
         return renderView(model, "utilisateur/inscription", "Inscription");
     }
@@ -70,7 +67,7 @@ public class UtilisateurController extends AbstractController {
             return renderView(model, "utilisateur/inscription", "Inscription");
         }
 
-        utilisateur.setRole(RoleConstants.MEMBRE);
+        // utilisateur.setRole(RoleConstants.MEMBRE);
         
         utilisateurService.createUtilisateur(utilisateur);
         

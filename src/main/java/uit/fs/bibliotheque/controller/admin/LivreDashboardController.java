@@ -1,7 +1,6 @@
 package uit.fs.bibliotheque.controller.admin;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +31,7 @@ import uit.fs.bibliotheque.service.LivreService;
 
 @Controller
 @RequestMapping("/dashboard/livres")
-@PreAuthorize("hasRole('ADMINISTRATEUR')")
+@PreAuthorize("hasPermission(null, 'IS_ADMIN')")
 /**
  * Contrôleur pour la gestion des livres dans le tableau de bord.
  */
@@ -179,9 +178,6 @@ public class LivreDashboardController extends AbstractController {
             result.rejectValue("copiesDisponibles", "error.livre", "Le nombre de copies doit être positif ou nul");
         }
 
-        if (livre.getDatePublication() != null && livre.getDatePublication().isAfter(LocalDate.now())) {
-            result.rejectValue("datePublication", "error.livre", "La date de publication ne peut pas être dans le futur");
-        }
         
         if (result.hasErrors()) {
             return renderView(model, "dashboard/livres/modifier_livre", "Modifier le livre");

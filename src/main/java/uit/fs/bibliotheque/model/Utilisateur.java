@@ -1,19 +1,25 @@
 package uit.fs.bibliotheque.model;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "utilisateurs")
@@ -59,19 +65,19 @@ public class Utilisateur implements UserDetails {
 
     @Column(name = "is_superuser")
     @Builder.Default
-    private boolean isSuperuser = false;
+    private Boolean isSuperuser = false;
 
     @Column(name = "is_staff")
     @Builder.Default
-    private boolean isStaff = false;
+    private Boolean isStaff = false;
 
     @Column(name = "is_active")
     @Builder.Default
-    private boolean isActive = true;
+    private Boolean isActive = true;
 
-    @Column(name = "account_non_expired" , nullable = true)
+    @Column(name = "account_non_expired")
     @Builder.Default
-    private boolean accountNonExpired = true;
+    private Boolean accountNonExpired = false;
 
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
@@ -102,10 +108,12 @@ public class Utilisateur implements UserDetails {
     }
     
     public boolean isAdmin() {
-        return RoleConstants.ADMINISTRATEUR.equalsIgnoreCase(role);
+        System.out.print("isAdmin called for user: " + username);
+        System.out.print("isSuperuser called for user: " + isSuperuser);
+        return isSuperuser;
     }
 
     public boolean isMember() {
-        return RoleConstants.MEMBRE.equalsIgnoreCase(role);
+        return !isSuperuser && !isStaff;
     }
 }

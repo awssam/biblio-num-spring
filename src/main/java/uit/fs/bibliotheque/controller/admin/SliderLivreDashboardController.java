@@ -22,7 +22,7 @@ import uit.fs.bibliotheque.service.LivreService;
 
 @Controller
 @RequestMapping("/dashboard/slider-livres")
-@PreAuthorize("hasRole('ADMINISTRATEUR')")
+@PreAuthorize("hasAuthority('IS_ADMIN')")
 public class SliderLivreDashboardController extends AbstractController {
 
     private final AccueilService accueilService;

@@ -25,7 +25,7 @@ import uit.fs.bibliotheque.service.AuteurService;
 
 @Controller
 @RequestMapping("/dashboard/auteurs")
-@PreAuthorize("hasRole('ADMINISTRATEUR')")
+@PreAuthorize("hasAuthority('IS_ADMIN')")
 /**
  * Contrôleur pour la gestion des auteurs dans le tableau de bord.
  */

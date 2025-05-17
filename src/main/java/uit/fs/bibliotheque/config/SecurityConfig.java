@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import uit.fs.bibliotheque.model.RoleConstants;
 import uit.fs.bibliotheque.service.UtilisateurService;
 
 @Configuration
@@ -29,7 +28,7 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/mon-compte","/mon-compte/**", "/changer-mot-de-passe","/emprunts","/emprunts/**","/emprunter","/emprunter/**").authenticated()
-                .requestMatchers("/dashboard","/dashboard/**").hasRole(RoleConstants.ADMINISTRATEUR)
+                .requestMatchers("/dashboard","/dashboard/**").authenticated()
                 .requestMatchers("/inscription", "/connexion").anonymous()
                 .requestMatchers("/", 
                 "/css/**", 
@@ -73,6 +72,9 @@ public class SecurityConfig {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(utilisateurService);
         provider.setPasswordEncoder(passwordEncoder);
+        provider.setPreAuthenticationChecks(preAuthenticationChecks -> {
+            System.out.println("Pre-authentication checks: " + preAuthenticationChecks);
+        });
         return provider;
     }
 }

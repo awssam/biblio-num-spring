@@ -52,7 +52,7 @@
                     </th:block>
                 </div>
                 
-                <th:block sec:authorize="hasRole('ADMINISTRATEUR')">
+                <th:block sec:authorize="hasAuthority('IS_ADMIN')">
                     <div class="mt-4 border-top pt-3">
                         <h5>Options d'administration</h5>
                         <div class="btn-group">

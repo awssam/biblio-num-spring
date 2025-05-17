@@ -1,6 +1,5 @@
 package uit.fs.bibliotheque.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,10 +36,10 @@ public class Livre {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length=500)
     private String titre;
 
-    @Column(name = "couverture")
+    @Column(name = "couverture" , nullable = true, length=500)
     private String couverture;
 
     @Column(columnDefinition = "TEXT")
@@ -50,7 +49,7 @@ public class Livre {
     private Integer copiesDisponibles = 1;
 
     @Column(name = "date_publication")
-    private LocalDate datePublication;
+    private String datePublication;
 
     @Column(name = "date_ajout", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
